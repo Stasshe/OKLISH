@@ -56,14 +56,43 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
       minHeight={dimensions.minHeight}
       maxWidth={dimensions.maxWidth}
       maxHeight={dimensions.maxHeight}
-      bounds={positioning.constrainToViewport ? 'window' : ''}
+      bounds={''}
       disableDragging={!positioning.draggable}
       enableResizing={positioning.resizable}
       dragHandleClassName="floating-window-header"
-      onDragStop={(_e, d) => setPosition({ x: d.x, y: d.y })}
+      onDragStop={(_e, d) => setPosition({ x: d.x, y: Math.max(0, d.y) })}
       onResizeStop={(_e, _direction, ref, _delta, pos) => {
         setSize({ width: ref.offsetWidth, height: ref.offsetHeight });
         setPosition(pos);
+      }}
+      resizeHandleStyles={{
+        right: { width: 18, background: 'rgba(255,255,255,0.18)', cursor: 'ew-resize' },
+        left: { width: 18, background: 'rgba(255,255,255,0.18)', cursor: 'ew-resize' },
+        bottom: { height: 18, background: 'rgba(255,255,255,0.18)', cursor: 'ns-resize' },
+        topRight: {
+          width: 28,
+          height: 28,
+          background: 'rgba(255,255,255,0.28)',
+          cursor: 'nesw-resize',
+        },
+        topLeft: {
+          width: 28,
+          height: 28,
+          background: 'rgba(255,255,255,0.28)',
+          cursor: 'nwse-resize',
+        },
+        bottomRight: {
+          width: 32,
+          height: 32,
+          background: 'rgba(255,255,255,0.33)',
+          cursor: 'nwse-resize',
+        },
+        bottomLeft: {
+          width: 32,
+          height: 32,
+          background: 'rgba(255,255,255,0.33)',
+          cursor: 'nesw-resize',
+        },
       }}
       style={{
         opacity: windowState.opacity,
