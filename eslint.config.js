@@ -15,6 +15,19 @@ export default [
         sourceType: 'module',
       },
     },
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        // Add more browser globals as needed
+      },
+    },
     plugins: {
       '@typescript-eslint': tseslint,
       import: importPlugin,
