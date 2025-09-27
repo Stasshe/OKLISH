@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { ThemeProvider } from './context/ThemeContext';
 import { FixedWindow } from './frame/FixedWindow';
 import { FloatingWindow } from './frame/FloatingWindow';
 import type {
@@ -36,27 +37,29 @@ function renderOKLISH(mode: frameMode = 'floating'): void {
   const rootEl = document.getElementById('oklish-root');
   if (!rootEl) return;
   const root = createRoot(rootEl);
-  if (mode === 'floating') {
-    root.render(
-      React.createElement(FloatingWindow, {
-        dimensions: defaultDimensions,
-        positioning: defaultPositioning,
-        windowState: defaultWindowState,
-        children: React.createElement(
-          'div',
-          { style: { color: '#fff', padding: 24 } },
-          'Hello Floating Window'
-        ),
-      })
-    );
-  } else {
-    root.render(
-      React.createElement(FixedWindow, {
-        defaultWidth: 200,
-        defaultHeight: 100,
-      })
-    );
-  }
+  root.render(
+    React.createElement(ThemeProvider, {
+      children: React.createElement(
+        React.Fragment,
+        {},
+        mode === 'floating'
+          ? React.createElement(FloatingWindow, {
+              dimensions: defaultDimensions,
+              positioning: defaultPositioning,
+              windowState: defaultWindowState,
+              children: React.createElement(
+                'div',
+                { style: { padding: 24 } },
+                'Hello Floating Window'
+              ),
+            })
+          : React.createElement(FixedWindow, {
+              defaultWidth: 200,
+              defaultHeight: 100,
+            })
+      ),
+    })
+  );
 }
 
 // グローバルAPIはUMDバンドルに任せる

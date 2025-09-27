@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import type { FloatingWindowProps } from '../types/floatingWindow';
 import { Rnd } from 'react-rnd';
 
@@ -40,6 +41,7 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
   },
   children,
 }) => {
+  const { theme } = useTheme();
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({
     width: dimensions.defaultWidth,
@@ -66,43 +68,43 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
         setPosition(pos);
       }}
       resizeHandleStyles={{
-        right: { width: 18, background: 'rgba(255,255,255,0.18)', cursor: 'ew-resize' },
-        left: { width: 18, background: 'rgba(255,255,255,0.18)', cursor: 'ew-resize' },
-        bottom: { height: 18, background: 'rgba(255,255,255,0.18)', cursor: 'ns-resize' },
+        right: { width: 18, background: theme.accent + '22', cursor: 'ew-resize' },
+        left: { width: 18, background: theme.accent + '22', cursor: 'ew-resize' },
+        bottom: { height: 18, background: theme.accent + '22', cursor: 'ns-resize' },
         topRight: {
           width: 28,
           height: 28,
-          background: 'rgba(255,255,255,0.28)',
+          background: theme.accent + '44',
           cursor: 'nesw-resize',
         },
         topLeft: {
           width: 28,
           height: 28,
-          background: 'rgba(255,255,255,0.28)',
+          background: theme.accent + '44',
           cursor: 'nwse-resize',
         },
         bottomRight: {
           width: 32,
           height: 32,
-          background: 'rgba(255,255,255,0.33)',
+          background: theme.accent + '55',
           cursor: 'nwse-resize',
         },
         bottomLeft: {
           width: 32,
           height: 32,
-          background: 'rgba(255,255,255,0.33)',
+          background: theme.accent + '55',
           cursor: 'nesw-resize',
         },
       }}
       style={{
         opacity: windowState.opacity,
         zIndex: 999999999999999999999,
-        background: '#222',
+        background: theme.background,
         borderRadius: 8,
-        boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
+        boxShadow: theme.shadow,
         overflow: 'hidden',
         transition: 'box-shadow 0.2s',
-        border: '2px solid #fff',
+        border: `2px solid ${theme.border}`,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -110,11 +112,11 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
       <div
         className="floating-window-header"
         style={{
-          background: '#444',
-          color: '#fff',
+          background: theme.header,
+          color: theme.headerText,
           padding: '12px 16px',
           fontWeight: 'bold',
-          borderBottom: '1px solid #888',
+          borderBottom: `1px solid ${theme.border}`,
           letterSpacing: 1,
           cursor: positioning.draggable ? 'move' : 'default',
           userSelect: 'none',
@@ -122,7 +124,7 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
       >
         Floating Window
       </div>
-      <div style={{ padding: 24, color: '#fff', flex: 1 }}>{children}</div>
+      <div style={{ padding: 24, color: theme.foreground, flex: 1 }}>{children}</div>
     </Rnd>
   );
 };
