@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OKLISH Core Test Page</title>
+  <style>
+    body { background: #222; margin: 0; width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="oklish-root"></div>
+  <script src="../dist/index.js"></script>
+  <script>
+    // 仮の初期化例
+    if (window.OKLISH && typeof window.OKLISH.init === 'function') {
+      window.OKLISH.init({ theme: 'dark' });
+    }
+  </script>
+</body>
+</html>
