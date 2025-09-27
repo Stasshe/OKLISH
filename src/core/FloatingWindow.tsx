@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { FloatingWindowProps } from '../types/floatingWindow';
-import interact from 'interactjs';
+import { Rnd } from 'react-rnd';
 
 const getDefaultDimensions = () => {
   if (typeof window !== 'undefined') {
@@ -40,92 +40,46 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
   },
   children,
 }) => {
-  const windowRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({
     width: dimensions.defaultWidth,
     height: dimensions.defaultHeight,
   });
 
-  useEffect(() => {
-    if (!windowRef.current) return;
-    if (!positioning.draggable && !positioning.resizable) return;
-
-    interact(windowRef.current)
-      .draggable(
-        positioning.draggable
-          ? {
-              listeners: {
-                move(event) {
-                  setPosition(pos => ({
-                    x: pos.x + event.dx,
-                    y: pos.y + event.dy,
-                  }));
-                },
-              },
-              modifiers: positioning.constrainToViewport
-                ? [
-                    interact.modifiers.restrictRect({
-                      restriction: 'parent',
-                      endOnly: true,
-                    }),
-                  ]
-                : [],
-            }
-          : false
-      )
-      .resizable(
-        positioning.resizable
-          ? {
-              edges: { left: true, right: true, bottom: true, top: true },
-              listeners: {
-                move(event) {
-                  setSize(size => ({
-                    width: Math.max(
-                      dimensions.minWidth,
-                      Math.min(dimensions.maxWidth, event.rect.width)
-                    ),
-                    height: Math.max(
-                      dimensions.minHeight,
-                      Math.min(dimensions.maxHeight, event.rect.height)
-                    ),
-                  }));
-                  setPosition(pos => ({
-                    x: pos.x + event.deltaRect.left,
-                    y: pos.y + event.deltaRect.top,
-                  }));
-                },
-              },
-            }
-          : false
-      );
-  }, [positioning, dimensions]);
+  if (windowState.minimized) return null;
 
   return (
-    <div
-      ref={windowRef}
+    <Rnd
+      size={{ width: size.width, height: size.height }}
+      position={{ x: position.x, y: position.y }}
+      minWidth={dimensions.minWidth}
+      minHeight={dimensions.minHeight}
+      maxWidth={dimensions.maxWidth}
+      maxHeight={dimensions.maxHeight}
+      bounds={positioning.constrainToViewport ? 'window' : ''}
+      disableDragging={!positioning.draggable}
+      enableResizing={positioning.resizable}
+      dragHandleClassName="floating-window-header"
+      onDragStop={(_e, d) => setPosition({ x: d.x, y: d.y })}
+      onResizeStop={(_e, _direction, ref, _delta, pos) => {
+        setSize({ width: ref.offsetWidth, height: ref.offsetHeight });
+        setPosition(pos);
+      }}
       style={{
-        position: 'fixed',
-        left: position.x,
-        top: position.y,
-        width: size.width,
-        height: size.height,
-        minWidth: dimensions.minWidth,
-        minHeight: dimensions.minHeight,
-        maxWidth: dimensions.maxWidth,
-        maxHeight: dimensions.maxHeight,
         opacity: windowState.opacity,
         zIndex: 999999999999999999999,
         background: '#222',
         borderRadius: 8,
         boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
         overflow: 'hidden',
-        display: windowState.minimized ? 'none' : 'block',
         transition: 'box-shadow 0.2s',
         border: '2px solid #fff',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <div
+        className="floating-window-header"
         style={{
           background: '#444',
           color: '#fff',
@@ -133,11 +87,13 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
           fontWeight: 'bold',
           borderBottom: '1px solid #888',
           letterSpacing: 1,
+          cursor: positioning.draggable ? 'move' : 'default',
+          userSelect: 'none',
         }}
       >
         Floating Window
       </div>
-      <div style={{ padding: 24, color: '#fff' }}>{children}</div>
-    </div>
+      <div style={{ padding: 24, color: '#fff', flex: 1 }}>{children}</div>
+    </Rnd>
   );
 };
