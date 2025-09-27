@@ -4,9 +4,7 @@ tsなので、コードを変更した場合はnpm run buildし、テストはnp
 
 ややこしいので、task: 'simplify'は使わないこと。task: 'distribute'か、'factor'を使うこと。変数の順番は、テストケースのexpectedが間違えている時がある。
 
-テストケースの実行にはnodeコマンドを直接使うこと。
-
-必ずSPECIFICATION.mdを参照すること。
+compact, simpledで美しいデザインを心がけろ。
 
 Be sure to reread the file and check for errors whenever you make a large change of 100 lines or more.
 

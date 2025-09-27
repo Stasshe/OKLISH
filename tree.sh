@@ -27,3 +27,5 @@ du -sh . >> tree.txt
 echo "" >> tree.txt
 echo "Build Size" >> tree.txt
 du -sh dist >> tree.txt
+echo "" >> tree.txt
+npm run size >> tree.txt
