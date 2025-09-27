@@ -1,6 +1,6 @@
 {
-  "name": "stasshe-npm",
-  "version": "0.1.1",
+  "name": "oklish",
+  "version": "0.1.0",
   "type": "module",
   "description": "",
   "main": "dist/index.js",
