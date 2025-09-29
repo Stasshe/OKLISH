@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FiMinus, FiMaximize, FiMinimize, FiX } from 'react-icons/fi';
 import { useTheme } from '../context/ThemeContext';
 import type { FloatingWindowProps } from '../types/floatingWindow';
 import { Rnd } from 'react-rnd';
@@ -150,19 +151,10 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
             onClick={() => setMinimized(true)}
             onMouseDown={e => e.stopPropagation()}
           >
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-            >
-              <rect
-                y="4.5"
-                width="10"
-                height="1"
-                rx="0.5"
-                fill="#fff"
-              />
-            </svg>
+            <FiMinus
+              color="#fff"
+              size={14}
+            />
           </span>
           <span
             title={maximized ? 'Restore' : 'Maximize'}
@@ -171,35 +163,15 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
             onMouseDown={e => e.stopPropagation()}
           >
             {maximized ? (
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-              >
-                <rect
-                  x="2"
-                  y="2"
-                  width="6"
-                  height="6"
-                  rx="1"
-                  fill="#fff"
-                />
-              </svg>
+              <FiMinimize
+                color="#fff"
+                size={14}
+              />
             ) : (
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-              >
-                <rect
-                  x="1"
-                  y="1"
-                  width="8"
-                  height="8"
-                  rx="1"
-                  fill="#fff"
-                />
-              </svg>
+              <FiMaximize
+                color="#fff"
+                size={14}
+              />
             )}
           </span>
           <span
@@ -208,28 +180,10 @@ export const FloatingWindow: React.FC<FloatingWindowProps> = ({
             onClick={() => setMinimized(true)}
             onMouseDown={e => e.stopPropagation()}
           >
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-            >
-              <line
-                x1="2"
-                y1="2"
-                x2="8"
-                y2="8"
-                stroke="#fff"
-                strokeWidth="1.5"
-              />
-              <line
-                x1="8"
-                y1="2"
-                x2="2"
-                y2="8"
-                stroke="#fff"
-                strokeWidth="1.5"
-              />
-            </svg>
+            <FiX
+              color="#fff"
+              size={14}
+            />
           </span>
         </div>
         <span
