@@ -2,8 +2,6 @@
 コードは全て英語で、コメントも英語で書くこと。
 tsなので、コードを変更した場合はnpm run buildし、テストはnpm testで実行。
 
-ややこしいので、task: 'simplify'は使わないこと。task: 'distribute'か、'factor'を使うこと。変数の順番は、テストケースのexpectedが間違えている時がある。
-
 compact, simpledで美しいデザインを心がけろ。
 
 Be sure to reread the file and check for errors whenever you make a large change of 100 lines or more.

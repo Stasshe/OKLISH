@@ -16,33 +16,33 @@ export interface Theme {
 const themes: Record<ThemeName, Theme> = {
   'dark': {
     name: 'dark',
-    background: '#222',
-    foreground: '#fff',
-    border: '#fff',
-    header: '#444',
-    headerText: '#fff',
-    shadow: '0 4px 24px rgba(0,0,0,0.2)',
-    accent: '#4fc3f7',
+    background: 'linear-gradient(135deg, #232526 0%, #414345 100%)', // deep blue-gray gradient
+    foreground: '#f3f6fa',
+    border: 'rgba(80,180,255,0.25)',
+    header: 'rgba(30,40,60,0.95)',
+    headerText: '#e3e8ef',
+    shadow: '0 8px 32px 0 rgba(0,40,80,0.25)',
+    accent: 'linear-gradient(90deg, #00c6ff 0%, #0072ff 100%)', // neon blue
   },
   'light': {
     name: 'light',
-    background: '#fff',
-    foreground: '#222',
-    border: '#222',
-    header: '#f5f5f5',
-    headerText: '#222',
-    shadow: '0 4px 24px rgba(0,0,0,0.08)',
-    accent: '#1976d2',
+    background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', // soft neutral gradient
+    foreground: '#222b3a',
+    border: 'rgba(120,120,140,0.12)',
+    header: 'rgba(255,255,255,0.95)',
+    headerText: '#2a3140',
+    shadow: '0 8px 32px 0 rgba(180,200,220,0.18)',
+    accent: 'linear-gradient(90deg, #ffb6b9 0%, #fcd34d 100%)', // pastel pink-yellow
   },
   'solarized-dark': {
     name: 'solarized-dark',
-    background: '#002b36',
-    foreground: '#93a1a1',
-    border: '#586e75',
-    header: '#073642',
-    headerText: '#f2f0f0',
-    shadow: '0 4px 24px rgba(7,54,66,0.3)',
-    accent: '#b58900',
+    background: 'linear-gradient(135deg, #002b36 0%, #073642 100%)',
+    foreground: '#eee8d5',
+    border: 'rgba(181,137,0,0.25)',
+    header: 'rgba(7,54,66,0.97)',
+    headerText: '#fdf6e3',
+    shadow: '0 8px 32px 0 rgba(38,139,210,0.18)',
+    accent: 'linear-gradient(90deg, #b58900 0%, #268bd2 100%)', // gold to blue
   },
 };
 
