@@ -9,6 +9,7 @@ export interface FixedWindowProps {
   defaultWidth?: number;
   defaultHeight?: number;
   onResize?: (width: number, height: number) => void;
+  children?: React.ReactNode;
 }
 
 export const FixedWindow: React.FC<FixedWindowProps> = ({
@@ -19,6 +20,7 @@ export const FixedWindow: React.FC<FixedWindowProps> = ({
   defaultWidth = 200,
   defaultHeight = 100,
   onResize,
+  children,
 }) => {
   const [size, setSize] = React.useState({ width: defaultWidth, height: defaultHeight });
 
@@ -50,7 +52,7 @@ export const FixedWindow: React.FC<FixedWindowProps> = ({
         onResize?.(width, height);
       }}
     >
-      <span>Resizer Only</span>
+      {children || 'Fixed Window'}
     </Rnd>
   );
 };

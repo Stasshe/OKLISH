@@ -2,14 +2,15 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { ThemeProvider } from './context/ThemeContext';
-import { FixedWindow } from './frame/FixedWindow';
-import { FloatingWindow } from './frame/FloatingWindow';
+import { FixedWindow } from './layout/FixedWindow';
+import { FloatingWindow } from './layout/FloatingWindow';
 import type {
   FloatingWindowDimensions,
   FloatingWindowPositioning,
   FloatingWindowState,
 } from './types/floatingWindow';
 import { FrameMode } from './types/frame';
+import ContentPanel from './layout/contentPanel';
 
 const defaultDimensions: FloatingWindowDimensions = {
   minWidth: 400,
@@ -44,13 +45,15 @@ export function renderOKLISH(mode: FrameMode = 'floating'): void {
           positioning={defaultPositioning}
           windowState={defaultWindowState}
         >
-          <div style={{ padding: 24 }}>Hello Floating Window</div>
+          <ContentPanel />
         </FloatingWindow>
       ) : (
         <FixedWindow
           defaultWidth={200}
           defaultHeight={100}
-        />
+        >
+          <ContentPanel />
+        </FixedWindow>
       )}
     </ThemeProvider>
   );
