@@ -1,7 +1,12 @@
-import typescript from 'rollup-plugin-typescript2';
-import tslib from 'typescript';
+import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import typescript from '@rollup/plugin-typescript';
+import terser from '@rollup/plugin-terser';
+import css from 'rollup-plugin-css-only';
+import sveltePreprocess from 'svelte-preprocess';
+
+const production = !process.env.ROLLUP_WATCH;
 
 const config = {
   input: 'src/index.ts',
@@ -21,18 +26,30 @@ const config = {
       format: 'umd',
       name: 'OKLISH',
       sourcemap: true,
-      globals: {},
     },
   ],
   plugins: [
-    resolve(),
+    svelte({
+      compilerOptions: {
+        dev: !production,
+        runes: true,
+      },
+    }),
+    css({ output: 'oklish.css' }),
+    resolve({
+      browser: true,
+      dedupe: ['svelte'],
+      exportConditions: ['svelte'],
+    }),
     commonjs(),
     typescript({
-      typescript: tslib,
-      tsconfig: 'tsconfig.json',
+      tsconfig: './tsconfig.json',
+      sourceMap: true,
+      declaration: true,
+      declarationDir: 'dist/types',
     }),
+    production && terser(),
   ],
-  // React/ReactDOMもバンドルに含めるためexternalは空
   external: [],
 };
 

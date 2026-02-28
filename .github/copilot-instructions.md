@@ -1,10 +1,11 @@
-必要なライブラリがあれば、インストールすること。
-コードは全て英語で、コメントも英語で書くこと。
-tsなので、コードを変更した場合はnpm run buildし、テストはnpm testで実行。
+Install necessary libraries when needed.
+Write all code and comments in English.
+TypeScript project: run `npm run build` to build, `npm test` to test.
 
-compact, simpledで美しいデザインを心がけろ。
-絵文字は使わず、react-iconsを使え。
-themecontextを使え。
+Compact, simple, and beautiful design.
+Do not use emojis in code - use Lucide Svelte for icons.
+Svelte 5 with runes ($state, $derived, $effect) for reactivity.
+Use .svelte.ts files for reactive state modules shared across components.
 
 Be sure to reread the file and check for errors whenever you make a large change of 100 lines or more.
 
@@ -14,7 +15,7 @@ Use the correct editing tools. Use new ones if possible.
 
 When I give instructions, I always test everything first, so never prompt to start the development server at the beginning.
 
-You can use icon libraries.
+You can use icon libraries (Lucide Svelte).
 
 Don't ask me to show you the file. You have tools to view and edit code directly. Please use the tools to view and edit the code directly, not to ask me to show you the file.
 
