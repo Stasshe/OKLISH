@@ -18,11 +18,11 @@ OKLISH - Modern Web Development Tool 仕様書
 
 ### 1.1 プロダクト概要
 
-OKLISHは、Chrome DevToolsライクな機能を提供するモダンなWeb開発検証ツールです。React製のフローティングウィンドウとして動作し、既存のWebページに非侵入的に統合できます。
+OKLISHは、Chrome DevToolsライクな機能を提供するモダンなWeb開発検証ツールです。svelte-dnd-actionとかの、フローティングウィンドウとして動作し、既存のWebページに非侵入的に統合できます。
 
 ### 1.2 主要特徴
 
-- **モダン設計**: React + TypeScript構成
+- **モダン設計**: svelte + TypeScript構成
 - **CDN配信**: npm経由での簡単導入
 - **拡張可能**: プラグインアーキテクチャ
 - **永続化**: sessionstorageによるセッション管理(!important!)
