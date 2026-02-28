@@ -9,11 +9,20 @@ const production = !process.env.ROLLUP_WATCH;
 
 const config = {
   input: 'src/index.ts',
+  onwarn(warning, warn) {
+    if (warning.code === 'CIRCULAR_DEPENDENCY') {
+      if (warning.ids?.some(id => id.includes('node_modules/svelte'))) return;
+      if (warning.ids?.length === 2 && warning.ids[0] === warning.ids[1]) return;
+    }
+    if (warning.pluginCode === 'TS5096') return;
+    warn(warning);
+  },
   output: [
     {
       file: 'dist/index.js',
       format: 'cjs',
       sourcemap: true,
+      exports: 'named',
     },
     {
       file: 'dist/index.esm.js',
@@ -25,6 +34,7 @@ const config = {
       format: 'umd',
       name: 'OKLISH',
       sourcemap: true,
+      exports: 'named',
     },
   ],
   plugins: [
@@ -44,8 +54,6 @@ const config = {
     typescript({
       tsconfig: './tsconfig.json',
       sourceMap: true,
-      declaration: true,
-      declarationDir: 'dist/types',
     }),
     production && terser(),
   ],

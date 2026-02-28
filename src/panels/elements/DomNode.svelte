@@ -1,6 +1,7 @@
 <script lang="ts">
   import { themeState } from '../../theme/theme.svelte.ts';
   import { elementsState } from './elements.svelte.ts';
+  import DomNode from './DomNode.svelte';
 
   interface Props {
     element: HTMLElement;
@@ -10,7 +11,9 @@
   let { element, depth = 0 }: Props = $props();
 
   const colors = $derived(themeState.theme.colors);
-  let expanded = $state(depth < 2);
+  // svelte-ignore state_referenced_locally
+  const initiallyExpanded = depth < 2;
+  let expanded = $state(initiallyExpanded);
 
   const tagName = $derived(element.tagName?.toLowerCase() ?? '');
   const hasChildren = $derived(element.children?.length > 0);
@@ -30,6 +33,8 @@
 </script>
 
 <div class="dom-node">
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
     class="node-line"
     class:selected={isSelected}
@@ -53,7 +58,7 @@
   {#if hasChildren && expanded}
     {#each Array.from(element.children) as child}
       {#if child instanceof HTMLElement}
-        <svelte:self element={child} depth={depth + 1} />
+        <DomNode element={child} depth={depth + 1} />
       {/if}
     {/each}
     <div style="padding-left:{depth * 16}px;">

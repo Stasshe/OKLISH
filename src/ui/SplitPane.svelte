@@ -12,7 +12,11 @@
   let { direction = 'horizontal', initialRatio = 0.5, first, second }: Props = $props();
 
   const colors = $derived(themeState.theme.colors);
-  let ratio = $state(initialRatio);
+  let ratio = $state(0.5);
+
+  $effect(() => {
+    ratio = initialRatio;
+  });
   let container: HTMLElement;
 
   function onpointerdown(e: PointerEvent) {

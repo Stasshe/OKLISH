@@ -1,5 +1,6 @@
 <script lang="ts">
   import { themeState } from '../theme/theme.svelte.ts';
+  import JsonViewer from './JsonViewer.svelte';
 
   interface Props {
     data: unknown;
@@ -11,7 +12,9 @@
 
   const colors = $derived(themeState.theme.colors);
 
-  let expanded = $state(depth < 1);
+  // svelte-ignore state_referenced_locally
+  const initiallyExpanded = depth < 1;
+  let expanded = $state(initiallyExpanded);
 
   function typeOf(val: unknown): string {
     if (val === null) return 'null';
@@ -57,7 +60,7 @@
           <div class="entry">
             <span style="color:{colors.accent};">{key}</span>
             <span style="color:{colors.textMuted};">: </span>
-            <svelte:self data={val} depth={depth + 1} {maxDepth} />
+            <JsonViewer data={val} depth={depth + 1} {maxDepth} />
           </div>
         {/each}
       </div>

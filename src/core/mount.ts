@@ -1,4 +1,4 @@
-import { mount, unmount } from 'svelte';
+import { mount, unmount, type Component } from 'svelte';
 import { HOST_ELEMENT_ID } from './constants';
 
 let hostElement: HTMLElement | null = null;
@@ -6,7 +6,7 @@ let shadowRoot: ShadowRoot | null = null;
 let appInstance: Record<string, unknown> | null = null;
 
 export function mountApp(
-  AppComponent: new (...args: unknown[]) => unknown,
+  AppComponent: Component,
   props: Record<string, unknown> = {},
 ): void {
   if (hostElement) return; // Already mounted

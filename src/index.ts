@@ -30,7 +30,7 @@ function init(userConfig?: Partial<OKLISHConfig>): void {
   });
 
   // Mount the Svelte app
-  mountApp(App as any, {
+  mountApp(App, {
     onclose: destroy,
   });
 
