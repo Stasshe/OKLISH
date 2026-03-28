@@ -30,14 +30,39 @@
   </div>
   <div class="actions" onpointerdown={(e) => e.stopPropagation()}>
     <button class="action-btn" style="color:{colors.textSecondary}" title="Switch window mode" onclick={() => windowState.cycleMode()}>
-      {windowState.isFloating ? '\u229E' : '\u229F'}
+      {#if windowState.isFloating}
+        <!-- Dock icon (action: dock) -->
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 8h20"></path>
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="M6 16h12"></path>
+        </svg>
+      {:else}
+        <!-- App window icon (action: float) -->
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="M10 4v4"></path>
+          <path d="M2 8h20"></path>
+          <path d="M6 4v4"></path>
+        </svg>
+      {/if}
     </button>
     <button class="action-btn" style="color:{colors.textSecondary}" title="Minimize" onclick={() => windowState.minimized = true}>
-      \u2500
+      <!-- Minimize2 icon -->
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="4 14 10 14 10 20"></polyline>
+        <polyline points="20 10 14 10 14 4"></polyline>
+        <line x1="14" x2="21" y1="10" y2="3"></line>
+        <line x1="3" x2="10" y1="21" y2="14"></line>
+      </svg>
     </button>
     {#if onclose}
       <button class="action-btn close-btn" style="color:{colors.textSecondary}" title="Close" onclick={onclose}>
-        \u2715
+        <!-- X icon -->
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
       </button>
     {/if}
   </div>
