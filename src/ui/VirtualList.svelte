@@ -1,13 +1,13 @@
 <script lang="ts" generics="T">
   import type { Snippet } from 'svelte';
 
-  interface Props {
+  export interface Props<T> {
     items: T[];
     itemHeight: number;
     children: Snippet<[T, number]>;
   }
 
-  let { items, itemHeight, children }: Props = $props();
+  let { items, itemHeight, children }: Props<T> = $props();
 
   let container: HTMLElement;
   let scrollTop = $state(0);

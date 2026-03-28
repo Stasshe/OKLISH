@@ -1,20 +1,22 @@
 import { deserialize, serialize } from "./serializer";
 
-export function createPersistedState<T extends Record<string, unknown>>(
+export function loadPersistedState<T extends Record<string, unknown>>(
   key: string,
   defaults: T,
 ): T {
   const stored = sessionStorage.getItem(key);
-  const initial = deserialize(stored, defaults);
+  return deserialize(stored, defaults);
+}
 
-  const state = $state<T>({ ...defaults, ...initial });
-
-  $effect(() => {
-    const snapshot = { ...state };
-    sessionStorage.setItem(key, serialize(snapshot));
-  });
-
-  return state;
+export function savePersistedState<T extends Record<string, unknown>>(
+  key: string,
+  value: T,
+): void {
+  try {
+    sessionStorage.setItem(key, serialize(value));
+  } catch {
+    /* ignore */
+  }
 }
 
 export function clearPersistedState(key: string): void {

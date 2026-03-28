@@ -15,7 +15,7 @@
     { name: 'indexedDB', label: 'Indexed DB' },
   ];
 
-  let showSW = $state(false);
+  
 </script>
 
 <div class="app-panel">
@@ -24,9 +24,9 @@
     {#each storageTypes as st}
       <button
         class="nav-item"
-        class:active={!showSW && applicationState.activeStorage === st.name}
-        style="color:{!showSW && applicationState.activeStorage === st.name ? colors.text : colors.textSecondary};background:{!showSW && applicationState.activeStorage === st.name ? colors.selection : 'transparent'};"
-        onclick={() => { applicationState.setStorage(st.name); showSW = false; }}
+        class:active={!applicationState.showSW && applicationState.activeStorage === st.name}
+        style="color:{!applicationState.showSW && applicationState.activeStorage === st.name ? colors.text : colors.textSecondary};background:{!applicationState.showSW && applicationState.activeStorage === st.name ? colors.selection : 'transparent'};"
+        onclick={() => { applicationState.setStorage(st.name); applicationState.setShowSW(false); }}
       >
         {st.label}
       </button>
@@ -34,15 +34,15 @@
     <div class="section-label" style="color:{colors.textMuted};">Application</div>
     <button
       class="nav-item"
-      class:active={showSW}
-      style="color:{showSW ? colors.text : colors.textSecondary};background:{showSW ? colors.selection : 'transparent'};"
-      onclick={() => showSW = true}
+      class:active={applicationState.showSW}
+      style="color:{applicationState.showSW ? colors.text : colors.textSecondary};background:{applicationState.showSW ? colors.selection : 'transparent'};"
+      onclick={() => applicationState.setShowSW(true)}
     >
       Service Workers
     </button>
   </div>
   <div class="content">
-    {#if showSW}
+    {#if applicationState.showSW}
       <ServiceWorkerInfo />
     {:else}
       {#if applicationState.activeStorage === 'indexedDB'}

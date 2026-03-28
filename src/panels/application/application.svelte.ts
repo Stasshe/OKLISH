@@ -1,10 +1,18 @@
 import type { StorageEntry, StorageType } from "./application.types";
-import { createPersistedState } from "../../storage/session.svelte.ts";
+import { loadPersistedState, savePersistedState } from "../../storage/session.svelte.ts";
 
-const persisted = createPersistedState<{ activeStorage: StorageType; searchQuery: string }>(
-  "oklish:application",
-  { activeStorage: "localStorage", searchQuery: "" },
-);
+const initial = loadPersistedState<{
+  activeStorage: StorageType;
+  searchQuery: string;
+  showSW: boolean;
+}>("oklish:application", { activeStorage: "localStorage", searchQuery: "", showSW: false });
+
+const persisted = $state(initial);
+
+// Persist changes explicitly from setters below. Using `$effect` here
+// causes a runtime error because `$effect` can only run during
+// component initialisation. Instead, call `savePersistedState` when the
+// state is mutated via the exported setters.
 
 function getStorageEntries(type: StorageType): StorageEntry[] {
   if (type === "cookies") {
@@ -34,9 +42,18 @@ export const applicationState = {
   },
   setStorage(type: StorageType): void {
     persisted.activeStorage = type;
+    savePersistedState("oklish:application", { ...persisted });
   },
   setSearch(q: string): void {
     persisted.searchQuery = q;
+    savePersistedState("oklish:application", { ...persisted });
+  },
+  get showSW(): boolean {
+    return persisted.showSW;
+  },
+  setShowSW(v: boolean): void {
+    persisted.showSW = v;
+    savePersistedState("oklish:application", { ...persisted });
   },
   getEntries(): StorageEntry[] {
     const entries = getStorageEntries(persisted.activeStorage);
