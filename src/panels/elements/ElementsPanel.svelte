@@ -63,4 +63,6 @@
   .inspect-btn.active { background: rgba(0, 120, 212, 0.2); }
   .main { flex: 1; min-height: 0; }
   .right-panel { display: flex; flex-direction: column; height: 100%; }
+  /* Disable scrolling on the first pane (the DOM tree) so the tree's internal scrolling is used */
+  :global(.elements-panel .split-pane > .pane:first-child) { overflow: hidden; }
 </style>
