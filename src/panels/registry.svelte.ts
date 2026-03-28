@@ -12,7 +12,7 @@ let activePanel = $state<string>(loadActivePanel());
 
 export const panelRegistry = {
   get panels(): PanelDefinition[] {
-    return panels.sort((a, b) => a.order - b.order);
+    return [...panels].sort((a, b) => a.order - b.order);
   },
   get activePanel(): string {
     return activePanel;
