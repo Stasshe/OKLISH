@@ -171,7 +171,7 @@ export async function clearObjectStore(dbName: string, storeName: string) {
   });
 }
 
-export async function updateEntry(dbName: string, storeName: string, key: IDBValidKey, newValue: any): Promise<void> {
+export async function updateEntry(dbName: string, storeName: string, key: IDBValidKey | undefined, newValue: any): Promise<void> {
   const dbs = await listDatabases();
   const info = dbs.find(d => d.name === dbName);
   const db = await openDatabase(dbName, info?.version);
@@ -179,7 +179,18 @@ export async function updateEntry(dbName: string, storeName: string, key: IDBVal
     try {
       const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);
-      store.put(newValue, key);
+      // If the object store uses an inline key (`keyPath` not null), do not pass the
+      // key parameter to `put`. Passing an out-of-line key when the store uses
+      // inline keys causes the DOMException seen by the user.
+      if (store.keyPath === null) {
+        if (typeof key === 'undefined') {
+          store.put(newValue);
+        } else {
+          store.put(newValue, key);
+        }
+      } else {
+        store.put(newValue);
+      }
       tx.oncomplete = () => {
         safeClose(db);
         resolve();
