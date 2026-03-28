@@ -1,6 +1,7 @@
 <script lang="ts">
   import { themeState } from '../../theme/theme.svelte.ts';
   import { elementsState } from './elements.svelte.ts';
+  import './inspectOverlay.ts';
   import DomTree from './DomTree.svelte';
   import StylesEditor from './StylesEditor.svelte';
   import LayoutInfo from './LayoutInfo.svelte';

@@ -12,11 +12,22 @@ export const elementsState = {
   },
   select(el: HTMLElement | null): void {
     selectedElement = el;
+    try {
+      window.dispatchEvent(new CustomEvent('oklish:selected-element', { detail: el }));
+    } catch (e) {
+      // ignore in non-browser environments
+    }
   },
   toggleInspect(): void {
-    inspectMode = !inspectMode;
+    // use setInspect so event is dispatched
+    this.setInspect(!inspectMode);
   },
   setInspect(v: boolean): void {
     inspectMode = v;
+    try {
+      window.dispatchEvent(new CustomEvent('oklish:inspect-mode', { detail: v }));
+    } catch (e) {
+      // ignore in non-browser environments
+    }
   },
 };
