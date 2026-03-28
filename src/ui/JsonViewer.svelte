@@ -13,7 +13,7 @@
   const colors = $derived(themeState.theme.colors);
 
   // svelte-ignore state_referenced_locally
-  const initiallyExpanded = depth < 1;
+  const initiallyExpanded = false; //not expanded by default
   let expanded = $state(initiallyExpanded);
 
   function typeOf(val: unknown): string {
