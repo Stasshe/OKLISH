@@ -37,7 +37,7 @@ export function parseCookies(responseHeaders: Record<string, string>): Cookie[] 
     const parts = cookieStr.split(';');
     if (!parts[0]) continue;
 
-    const [name, value] = parts[0].split('=').map(s => s.trim());
+    const [name, value] = parts[0].split('=').map((s: string) => s.trim());
     if (!name) continue;
 
     const cookie: Cookie = {
@@ -47,7 +47,7 @@ export function parseCookies(responseHeaders: Record<string, string>): Cookie[] 
 
     for (let i = 1; i < parts.length; i++) {
       const part = parts[i].trim();
-      const [attrName, attrValue] = part.split('=').map(s => s.trim());
+      const [attrName, attrValue] = part.split('=').map((s: string) => s.trim());
 
       if (attrName.toLowerCase() === 'domain') {
         cookie.domain = attrValue;

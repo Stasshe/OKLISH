@@ -5,10 +5,9 @@
 
   interface Props {
     ondragstart?: (e: PointerEvent) => void;
-    onclose?: () => void;
   }
 
-  let { ondragstart, onclose }: Props = $props();
+  let { ondragstart }: Props = $props();
 
   const colors = $derived(themeState.theme.colors);
 </script>
@@ -56,15 +55,6 @@
         <line x1="3" x2="10" y1="21" y2="14"></line>
       </svg>
     </button>
-    {#if onclose}
-      <button class="action-btn close-btn" style="color:{colors.textSecondary}" title="Close" onclick={onclose}>
-        <!-- X icon -->
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
-        </svg>
-      </button>
-    {/if}
   </div>
 </div>
 
@@ -118,5 +108,4 @@
     border-radius: 4px;
   }
   .action-btn:hover { opacity: 0.7; }
-  .close-btn:hover { background: #e81123; color: #fff !important; }
 </style>
