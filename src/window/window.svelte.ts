@@ -1,7 +1,7 @@
-import type { WindowMode } from './window.types';
-import { WINDOW_DEFAULTS } from '../core/constants';
+import { WINDOW_DEFAULTS } from "../core/constants";
+import type { WindowMode } from "./window.types";
 
-const WINDOW_KEY = 'oklish:window';
+const WINDOW_KEY = "oklish:window";
 
 interface WindowState {
   mode: WindowMode;
@@ -17,9 +17,11 @@ function loadState(): WindowState {
   try {
     const raw = sessionStorage.getItem(WINDOW_KEY);
     if (raw) return JSON.parse(raw);
-  } catch { /* empty */ }
+  } catch {
+    /* empty */
+  }
   return {
-    mode: 'floating',
+    mode: "floating",
     x: WINDOW_DEFAULTS.DEFAULT_X,
     y: WINDOW_DEFAULTS.DEFAULT_Y,
     width: WINDOW_DEFAULTS.DEFAULT_WIDTH,
@@ -49,24 +51,63 @@ function saveState(): void {
 }
 
 export const windowState = {
-  get mode() { return mode; },
-  set mode(v: WindowMode) { mode = v; saveState(); },
-  get x() { return x; },
-  set x(v: number) { x = v; saveState(); },
-  get y() { return y; },
-  set y(v: number) { y = v; saveState(); },
-  get width() { return width; },
-  set width(v: number) { width = v; saveState(); },
-  get height() { return height; },
-  set height(v: number) { height = v; saveState(); },
-  get minimized() { return minimized; },
-  set minimized(v: boolean) { minimized = v; saveState(); },
-  get dockedSize() { return dockedSize; },
-  set dockedSize(v: number) { dockedSize = v; saveState(); },
-  get isFloating() { return mode === 'floating'; },
-  get isDocked() { return mode !== 'floating'; },
+  get mode() {
+    return mode;
+  },
+  set mode(v: WindowMode) {
+    mode = v;
+    saveState();
+  },
+  get x() {
+    return x;
+  },
+  set x(v: number) {
+    x = v;
+    saveState();
+  },
+  get y() {
+    return y;
+  },
+  set y(v: number) {
+    y = v;
+    saveState();
+  },
+  get width() {
+    return width;
+  },
+  set width(v: number) {
+    width = v;
+    saveState();
+  },
+  get height() {
+    return height;
+  },
+  set height(v: number) {
+    height = v;
+    saveState();
+  },
+  get minimized() {
+    return minimized;
+  },
+  set minimized(v: boolean) {
+    minimized = v;
+    saveState();
+  },
+  get dockedSize() {
+    return dockedSize;
+  },
+  set dockedSize(v: number) {
+    dockedSize = v;
+    saveState();
+  },
+  get isFloating() {
+    return mode === "floating";
+  },
+  get isDocked() {
+    return mode !== "floating";
+  },
   cycleMode(): void {
-    const modes: WindowMode[] = ['floating', 'docked-bottom', 'docked-right', 'docked-left'];
+    const modes: WindowMode[] = ["floating", "docked-bottom", "docked-right", "docked-left"];
     const idx = modes.indexOf(mode);
     mode = modes[(idx + 1) % modes.length];
     saveState();

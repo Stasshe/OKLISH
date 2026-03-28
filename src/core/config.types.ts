@@ -1,7 +1,7 @@
-import type { WindowMode } from '../window/window.types';
+import type { WindowMode } from "../window/window.types";
 
 export interface OKLISHConfig {
-  theme: 'dark' | 'light';
+  theme: "dark" | "light";
   defaultPanel: string;
   windowMode: WindowMode;
   plugins: unknown[];

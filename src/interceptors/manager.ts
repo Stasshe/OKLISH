@@ -1,8 +1,8 @@
-import type { InterceptorHandle, CapturedLog, CapturedRequest } from './interceptor.types';
-import { interceptConsole } from './console';
-import { interceptFetch } from './fetch';
-import { interceptXHR } from './xhr';
-import { interceptErrors } from './errors';
+import { interceptConsole } from "./console";
+import { interceptErrors } from "./errors";
+import { interceptFetch } from "./fetch";
+import type { CapturedLog, CapturedRequest, InterceptorHandle } from "./interceptor.types";
+import { interceptXHR } from "./xhr";
 
 interface InterceptorCallbacks {
   onLog: (entry: CapturedLog) => void;

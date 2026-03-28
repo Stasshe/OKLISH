@@ -1,5 +1,5 @@
 // sessionStorage key prefix
-export const STORAGE_PREFIX = 'oklish:';
+export const STORAGE_PREFIX = "oklish:";
 
 // Storage keys
 export const STORAGE_KEYS = {
@@ -25,7 +25,7 @@ export const WINDOW_DEFAULTS = {
 } as const;
 
 // CSS custom property prefix
-export const CSS_PREFIX = 'oklish';
+export const CSS_PREFIX = "oklish";
 
 // Host element ID
-export const HOST_ELEMENT_ID = 'oklish-host';
+export const HOST_ELEMENT_ID = "oklish-host";

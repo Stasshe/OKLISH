@@ -1,4 +1,4 @@
-import type { NetworkRequest } from '../network.types';
+import type { NetworkRequest } from "../network.types";
 
 interface HAR {
   log: {
@@ -96,7 +96,7 @@ function headersToArray(headers: Record<string, string>): HARHeader[] {
 }
 
 function generateHAR(requests: NetworkRequest[]): HAR {
-  const entries: HAREntry[] = requests.map(req => {
+  const entries: HAREntry[] = requests.map((req) => {
     const startTime = new Date(req.startTime);
 
     return {
@@ -104,30 +104,31 @@ function generateHAR(requests: NetworkRequest[]): HAR {
       request: {
         method: req.method,
         url: req.url,
-        httpVersion: req.protocol || 'HTTP/1.1',
+        httpVersion: req.protocol || "HTTP/1.1",
         headers: headersToArray(req.requestHeaders),
         queryString: parseQueryString(req.url),
         postData: req.requestBody
           ? {
-              mimeType: req.responseHeaders['content-type'] || 'application/x-www-form-urlencoded',
-              text: typeof req.requestBody === 'string'
-                ? req.requestBody
-                : JSON.stringify(req.requestBody),
+              mimeType: req.responseHeaders["content-type"] || "application/x-www-form-urlencoded",
+              text:
+                typeof req.requestBody === "string"
+                  ? req.requestBody
+                  : JSON.stringify(req.requestBody),
             }
           : undefined,
         headersSize: 0,
         bodySize: req.requestBody
-          ? (typeof req.requestBody === 'string'
-              ? req.requestBody.length
-              : JSON.stringify(req.requestBody).length)
+          ? typeof req.requestBody === "string"
+            ? req.requestBody.length
+            : JSON.stringify(req.requestBody).length
           : 0,
       },
       response: {
         status: req.status,
         statusText: req.statusText,
-        httpVersion: req.protocol || 'HTTP/1.1',
+        httpVersion: req.protocol || "HTTP/1.1",
         headers: headersToArray(req.responseHeaders),
-        cookies: req.cookies.map(c => ({
+        cookies: req.cookies.map((c) => ({
           name: c.name,
           value: c.value,
           path: c.path,
@@ -139,14 +140,15 @@ function generateHAR(requests: NetworkRequest[]): HAR {
         })),
         content: {
           size: req.resourceSize,
-          mimeType: req.responseHeaders['content-type'] || 'text/plain',
-          text: typeof req.responseBody === 'string'
-            ? req.responseBody
-            : req.responseBody
-              ? JSON.stringify(req.responseBody)
-              : undefined,
+          mimeType: req.responseHeaders["content-type"] || "text/plain",
+          text:
+            typeof req.responseBody === "string"
+              ? req.responseBody
+              : req.responseBody
+                ? JSON.stringify(req.responseBody)
+                : undefined,
         },
-        redirectURL: req.responseHeaders['location'] || '',
+        redirectURL: req.responseHeaders["location"] || "",
         headersSize: 0,
         bodySize: req.resourceSize,
       },
@@ -166,10 +168,10 @@ function generateHAR(requests: NetworkRequest[]): HAR {
 
   return {
     log: {
-      version: '1.2',
+      version: "1.2",
       creator: {
-        name: 'OKLISH',
-        version: '1.0.0',
+        name: "OKLISH",
+        version: "1.0.0",
       },
       entries,
     },
@@ -179,11 +181,11 @@ function generateHAR(requests: NetworkRequest[]): HAR {
 export function exportHAR(requests: NetworkRequest[]): void {
   const har = generateHAR(requests);
   const json = JSON.stringify(har, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
+  const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = `network-${new Date().toISOString().replace(/[:.]/g, '-')}.har`;
+  a.download = `network-${new Date().toISOString().replace(/[:.]/g, "-")}.har`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

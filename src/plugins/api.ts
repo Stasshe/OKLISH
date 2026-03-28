@@ -1,8 +1,8 @@
-import type { PluginAPI } from './plugin.types';
-import type { PanelDefinition } from '../panels/panel.types';
-import { panelRegistry } from '../panels/registry.svelte.ts';
-import { eventBus } from '../core/events';
-import { STORAGE_PREFIX } from '../core/constants';
+import { STORAGE_PREFIX } from "../core/constants";
+import { eventBus } from "../core/events";
+import type { PanelDefinition } from "../panels/panel.types";
+import { panelRegistry } from "../panels/registry.svelte.ts";
+import type { PluginAPI } from "./plugin.types";
 
 export function createPluginAPI(pluginName: string): PluginAPI {
   const storagePrefix = `${STORAGE_PREFIX}plugin:${pluginName}:`;
@@ -31,7 +31,9 @@ export function createPluginAPI(pluginName: string): PluginAPI {
       set<T>(key: string, value: T): void {
         try {
           sessionStorage.setItem(storagePrefix + key, JSON.stringify(value));
-        } catch { /* quota exceeded */ }
+        } catch {
+          /* quota exceeded */
+        }
       },
       remove(key: string): void {
         sessionStorage.removeItem(storagePrefix + key);

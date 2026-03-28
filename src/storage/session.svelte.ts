@@ -1,4 +1,4 @@
-import { serialize, deserialize } from './serializer';
+import { deserialize, serialize } from "./serializer";
 
 export function createPersistedState<T extends Record<string, unknown>>(
   key: string,
@@ -24,7 +24,7 @@ export function clearPersistedState(key: string): void {
 export function clearAllPersistedState(): void {
   const keys = Object.keys(sessionStorage);
   for (const key of keys) {
-    if (key.startsWith('oklish:')) {
+    if (key.startsWith("oklish:")) {
       sessionStorage.removeItem(key);
     }
   }

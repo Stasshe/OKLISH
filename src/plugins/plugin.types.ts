@@ -1,4 +1,4 @@
-import type { PanelDefinition } from '../panels/panel.types';
+import type { PanelDefinition } from "../panels/panel.types";
 
 export interface PluginAPI {
   panels: {

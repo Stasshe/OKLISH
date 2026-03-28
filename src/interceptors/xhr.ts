@@ -1,4 +1,4 @@
-import type { InterceptorHandle, CapturedRequest } from './interceptor.types';
+import type { CapturedRequest, InterceptorHandle } from "./interceptor.types";
 
 type RequestCallback = (entry: CapturedRequest) => void;
 
@@ -10,11 +10,7 @@ export function interceptXHR(callback: RequestCallback): InterceptorHandle {
   const originalSend = OriginalXHR.prototype.send;
   const originalSetHeader = OriginalXHR.prototype.setRequestHeader;
 
-  XMLHttpRequest.prototype.open = function (
-    method: string,
-    url: string | URL,
-    ...rest: unknown[]
-  ) {
+  XMLHttpRequest.prototype.open = function (method: string, url: string | URL, ...rest: unknown[]) {
     (this as any).__oklish = {
       id: `xhr_${idCounter++}`,
       method: method.toUpperCase(),
@@ -42,12 +38,12 @@ export function interceptXHR(callback: RequestCallback): InterceptorHandle {
     meta.startTime = performance.now();
     meta.requestBody = body;
 
-    this.addEventListener('loadend', () => {
+    this.addEventListener("loadend", () => {
       const endTime = performance.now();
       const responseHeaders: Record<string, string> = {};
       const rawHeaders = this.getAllResponseHeaders();
-      rawHeaders.split('\r\n').forEach((line) => {
-        const idx = line.indexOf(': ');
+      rawHeaders.split("\r\n").forEach((line) => {
+        const idx = line.indexOf(": ");
         if (idx > 0) {
           responseHeaders[line.slice(0, idx).toLowerCase()] = line.slice(idx + 2);
         }
@@ -58,8 +54,14 @@ export function interceptXHR(callback: RequestCallback): InterceptorHandle {
       try {
         const text = this.responseText;
         size = new Blob([text]).size;
-        try { responseBody = JSON.parse(text); } catch { responseBody = text; }
-      } catch { /* empty */ }
+        try {
+          responseBody = JSON.parse(text);
+        } catch {
+          responseBody = text;
+        }
+      } catch {
+        /* empty */
+      }
 
       const entry: CapturedRequest = {
         id: meta.id,
@@ -71,13 +73,13 @@ export function interceptXHR(callback: RequestCallback): InterceptorHandle {
         responseHeaders,
         requestBody: meta.requestBody,
         responseBody,
-        responseType: responseHeaders['content-type'] ?? '',
+        responseType: responseHeaders["content-type"] ?? "",
         startTime: meta.startTime,
         endTime,
         duration: endTime - meta.startTime,
         size,
-        type: 'xhr',
-        error: this.status === 0 ? 'Network Error' : undefined,
+        type: "xhr",
+        error: this.status === 0 ? "Network Error" : undefined,
       };
 
       callback(entry);

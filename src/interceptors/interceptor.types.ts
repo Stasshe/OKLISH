@@ -2,7 +2,7 @@ export interface InterceptorHandle {
   restore(): void;
 }
 
-export type LogLevel = 'log' | 'warn' | 'error' | 'info' | 'debug';
+export type LogLevel = "log" | "warn" | "error" | "info" | "debug";
 
 export interface CapturedLog {
   id: string;
@@ -27,6 +27,6 @@ export interface CapturedRequest {
   endTime: number;
   duration: number;
   size: number;
-  type: 'fetch' | 'xhr';
+  type: "fetch" | "xhr";
   error?: string;
 }

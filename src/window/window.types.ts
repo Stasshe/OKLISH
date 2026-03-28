@@ -1,4 +1,4 @@
-export type WindowMode = 'floating' | 'docked-bottom' | 'docked-right' | 'docked-left';
+export type WindowMode = "floating" | "docked-bottom" | "docked-right" | "docked-left";
 
 export interface WindowPosition {
   x: number;

@@ -1,14 +1,13 @@
-import type { PanelDefinition } from './panel.types';
+import type { PanelDefinition } from "./panel.types";
 
-const PANEL_KEY = 'oklish:activePanel';
+const PANEL_KEY = "oklish:activePanel";
 
 function loadActivePanel(): string {
-  return sessionStorage.getItem(PANEL_KEY) ?? 'console';
+  return sessionStorage.getItem(PANEL_KEY) ?? "console";
 }
 
 let panels = $state<PanelDefinition[]>([]);
 let activePanel = $state<string>(loadActivePanel());
-
 
 export const panelRegistry = {
   get panels(): PanelDefinition[] {
@@ -28,7 +27,7 @@ export const panelRegistry = {
       if (panels.length > 0) {
         activePanel = panels[0].name;
       } else {
-        activePanel = 'console';
+        activePanel = "console";
       }
       sessionStorage.setItem(PANEL_KEY, activePanel);
     }
@@ -44,7 +43,7 @@ export const panelRegistry = {
   },
   clear(): void {
     panels = [];
-    activePanel = 'console';
-    sessionStorage.setItem(PANEL_KEY, 'console');
+    activePanel = "console";
+    sessionStorage.setItem(PANEL_KEY, "console");
   },
 };

@@ -1,4 +1,4 @@
-import type { OKLISHConfig } from '../core/config.types';
+import type { OKLISHConfig } from "../core/config.types";
 
 interface OKLISHInstance {
   init(config?: Partial<OKLISHConfig>): void;
@@ -11,5 +11,3 @@ declare global {
     OKLISH: OKLISHInstance;
   }
 }
-
-export {};

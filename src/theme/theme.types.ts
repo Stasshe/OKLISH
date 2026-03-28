@@ -1,4 +1,4 @@
-export type ThemeName = 'dark' | 'light';
+export type ThemeName = "dark" | "light";
 
 export interface ThemeColors {
   bg: string;

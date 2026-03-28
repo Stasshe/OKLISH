@@ -3,7 +3,7 @@ export interface StorageEntry {
   value: string;
 }
 
-export type StorageType = 'localStorage' | 'sessionStorage' | 'cookies' | 'indexedDB';
+export type StorageType = "localStorage" | "sessionStorage" | "cookies" | "indexedDB";
 
 export interface IDBDatabaseInfo {
   name: string;

@@ -1,7 +1,7 @@
 export function getElementSelector(el: Element): string {
   if (el.id) return `#${el.id}`;
   const tag = el.tagName.toLowerCase();
-  const classes = Array.from(el.classList).join('.');
+  const classes = Array.from(el.classList).join(".");
   return classes ? `${tag}.${classes}` : tag;
 }
 
@@ -25,5 +25,5 @@ export function getAttributes(el: Element): Record<string, string> {
 
 export function isVisible(el: Element): boolean {
   const style = window.getComputedStyle(el);
-  return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+  return style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0";
 }

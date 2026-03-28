@@ -1,6 +1,13 @@
-import type { NetworkRequest } from './network.types';
-import type { CapturedRequest } from '../../interceptors/interceptor.types';
-import { parseDomain, parseProtocol, parseCookies, calculateTimingPhases, inferPriority, extractIpAddress } from './utils/parseHeaders';
+import type { CapturedRequest } from "../../interceptors/interceptor.types";
+import type { NetworkRequest } from "./network.types";
+import {
+  calculateTimingPhases,
+  extractIpAddress,
+  inferPriority,
+  parseCookies,
+  parseDomain,
+  parseProtocol,
+} from "./utils/parseHeaders";
 
 function enrichRequest(captured: CapturedRequest): NetworkRequest {
   const domain = parseDomain(captured.url);
@@ -24,35 +31,35 @@ function enrichRequest(captured: CapturedRequest): NetworkRequest {
 
 let requests = $state<NetworkRequest[]>([]);
 let selectedId = $state<string | null>(null);
-let searchQuery = $state('');
-let typeFilter = $state<string>('all');
-let statusFilter = $state<string>('all'); // all, 2xx, 3xx, 4xx, 5xx, failed
-let methodFilter = $state<string>('all');
-let sizeRange = $state<[number, number]>([0, Infinity]); // min, max in bytes
-let durationRange = $state<[number, number]>([0, Infinity]); // min, max in ms
-let groupBy = $state<'none' | 'domain'>('none');
-let sortBy = $state<'time' | 'size' | 'duration' | 'name'>('time');
+let searchQuery = $state("");
+let typeFilter = $state<string>("all");
+let statusFilter = $state<string>("all"); // all, 2xx, 3xx, 4xx, 5xx, failed
+let methodFilter = $state<string>("all");
+let sizeRange = $state<[number, number]>([0, Number.POSITIVE_INFINITY]); // min, max in bytes
+let durationRange = $state<[number, number]>([0, Number.POSITIVE_INFINITY]); // min, max in ms
+let groupBy = $state<"none" | "domain">("none");
+let sortBy = $state<"time" | "size" | "duration" | "name">("time");
 
 function matchesStatusFilter(status: number, filter: string): boolean {
-  if (filter === 'all') return true;
-  if (filter === 'failed') return status === 0;
-  if (filter === '2xx') return status >= 200 && status < 300;
-  if (filter === '3xx') return status >= 300 && status < 400;
-  if (filter === '4xx') return status >= 400 && status < 500;
-  if (filter === '5xx') return status >= 500;
+  if (filter === "all") return true;
+  if (filter === "failed") return status === 0;
+  if (filter === "2xx") return status >= 200 && status < 300;
+  if (filter === "3xx") return status >= 300 && status < 400;
+  if (filter === "4xx") return status >= 400 && status < 500;
+  if (filter === "5xx") return status >= 500;
   return true;
 }
 
 const filteredRequests = $derived.by(() => {
-  let filtered = requests.filter((req) => {
+  const filtered = requests.filter((req) => {
     // Type filter (fetch vs xhr)
-    if (typeFilter !== 'all' && req.type !== typeFilter) return false;
+    if (typeFilter !== "all" && req.type !== typeFilter) return false;
 
     // Status filter
     if (!matchesStatusFilter(req.status, statusFilter)) return false;
 
     // Method filter
-    if (methodFilter !== 'all' && req.method !== methodFilter) return false;
+    if (methodFilter !== "all" && req.method !== methodFilter) return false;
 
     // Size range filter
     if (req.size < sizeRange[0] || req.size > sizeRange[1]) return false;
@@ -75,9 +82,9 @@ const filteredRequests = $derived.by(() => {
 
   // Apply sorting
   const sorted = [...filtered].sort((a, b) => {
-    if (sortBy === 'size') return b.size - a.size;
-    if (sortBy === 'duration') return b.duration - a.duration;
-    if (sortBy === 'name') return a.url.localeCompare(b.url);
+    if (sortBy === "size") return b.size - a.size;
+    if (sortBy === "duration") return b.duration - a.duration;
+    if (sortBy === "name") return a.url.localeCompare(b.url);
     // Default 'time': maintain insertion order (original order)
     return 0;
   });
@@ -86,11 +93,11 @@ const filteredRequests = $derived.by(() => {
 });
 
 const groupedRequests = $derived.by(() => {
-  if (groupBy === 'none') {
+  if (groupBy === "none") {
     return filteredRequests;
   }
 
-  if (groupBy === 'domain') {
+  if (groupBy === "domain") {
     // Create a flat array with group headers injected
     // This is a simple approach: we'll mark group headers with a special property
     const grouped: any[] = [];
@@ -131,7 +138,7 @@ export const networkState = {
     return selectedId;
   },
   get selectedRequest(): NetworkRequest | undefined {
-    return requests.find(r => r.id === selectedId);
+    return requests.find((r) => r.id === selectedId);
   },
   get searchQuery(): string {
     return searchQuery;
@@ -151,10 +158,10 @@ export const networkState = {
   get durationRange(): [number, number] {
     return durationRange;
   },
-  get groupBy(): 'none' | 'domain' {
+  get groupBy(): "none" | "domain" {
     return groupBy;
   },
-  get sortBy(): 'time' | 'size' | 'duration' | 'name' {
+  get sortBy(): "time" | "size" | "duration" | "name" {
     return sortBy;
   },
   addRequest(captured: CapturedRequest): void {
@@ -182,10 +189,10 @@ export const networkState = {
   setDurationRange(range: [number, number]): void {
     durationRange = range;
   },
-  setGroupBy(g: 'none' | 'domain'): void {
+  setGroupBy(g: "none" | "domain"): void {
     groupBy = g;
   },
-  setSortBy(s: 'time' | 'size' | 'duration' | 'name'): void {
+  setSortBy(s: "time" | "size" | "duration" | "name"): void {
     sortBy = s;
   },
   clear(): void {

@@ -1,4 +1,4 @@
-export type LogLevel = 'log' | 'warn' | 'error' | 'info' | 'debug';
+export type LogLevel = "log" | "warn" | "error" | "info" | "debug";
 
 export interface ConsoleEntry {
   id: string;
@@ -8,4 +8,4 @@ export interface ConsoleEntry {
   stack?: string;
 }
 
-export type ConsoleFilter = LogLevel | 'all';
+export type ConsoleFilter = LogLevel | "all";

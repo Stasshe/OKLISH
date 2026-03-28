@@ -1,19 +1,19 @@
-import type { OKLISHConfig } from './core/config.types';
-import { resolveConfig } from './core/config';
-import { mountApp, unmountApp } from './core/mount';
-import { installInterceptors, uninstallInterceptors } from './interceptors/manager';
-import { consoleState } from './panels/console/console.svelte.ts';
-import { networkState } from './panels/network/network.svelte.ts';
-import { pluginManager } from './plugins/manager.svelte.ts';
-import { panelRegistry } from './panels/registry.svelte.ts';
-import { eventBus } from './core/events';
-import App from './App.svelte';
+import App from "./App.svelte";
+import { resolveConfig } from "./core/config";
+import type { OKLISHConfig } from "./core/config.types";
+import { eventBus } from "./core/events";
+import { mountApp, unmountApp } from "./core/mount";
+import { installInterceptors, uninstallInterceptors } from "./interceptors/manager";
+import { consoleState } from "./panels/console/console.svelte.ts";
+import { networkState } from "./panels/network/network.svelte.ts";
+import { panelRegistry } from "./panels/registry.svelte.ts";
+import { pluginManager } from "./plugins/manager.svelte.ts";
 
 let initialized = false;
 
 function init(userConfig?: Partial<OKLISHConfig>): void {
   if (initialized) {
-    console.warn('[OKLISH] Already initialized');
+    console.warn("[OKLISH] Already initialized");
     return;
   }
 
@@ -69,7 +69,7 @@ function registerPlugin(plugin: unknown): void {
 const OKLISH = { init, destroy, registerPlugin };
 
 // UMD global registration
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   (window as any).OKLISH = OKLISH;
 }
 

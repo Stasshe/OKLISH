@@ -15,7 +15,7 @@ export interface Cookie {
   path?: string;
   secure?: boolean;
   httpOnly?: boolean;
-  sameSite?: 'Strict' | 'Lax' | 'None';
+  sameSite?: "Strict" | "Lax" | "None";
   expires?: string;
 }
 
@@ -34,11 +34,11 @@ export interface NetworkRequest {
   endTime: number;
   duration: number;
   size: number;
-  type: 'fetch' | 'xhr';
+  type: "fetch" | "xhr";
   error?: string;
 
   // New fields
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: "low" | "medium" | "high" | "critical";
   protocol: string; // HTTP/1.1, HTTP/2, HTTP/3, etc.
   domain: string; // parsed from URL
   timingPhases: TimingPhase;

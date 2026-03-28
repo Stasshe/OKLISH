@@ -1,4 +1,4 @@
-import type { WindowMode } from '../window/window.types';
+import type { WindowMode } from "../window/window.types";
 
 export interface PersistedWindowState {
   mode: WindowMode;

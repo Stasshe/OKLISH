@@ -1,8 +1,8 @@
-import type { InterceptorHandle, CapturedLog, LogLevel } from './interceptor.types';
+import type { CapturedLog, InterceptorHandle, LogLevel } from "./interceptor.types";
 
 type LogCallback = (entry: CapturedLog) => void;
 
-const LOG_LEVELS: LogLevel[] = ['log', 'warn', 'error', 'info', 'debug'];
+const LOG_LEVELS: LogLevel[] = ["log", "warn", "error", "info", "debug"];
 
 let idCounter = 0;
 
@@ -19,7 +19,7 @@ export function interceptConsole(callback: LogCallback): InterceptorHandle {
         level,
         args,
         timestamp: Date.now(),
-        stack: new Error().stack?.split('\n').slice(2).join('\n'),
+        stack: new Error().stack?.split("\n").slice(2).join("\n"),
       };
       callback(entry);
       original(...args);

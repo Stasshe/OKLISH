@@ -1,4 +1,4 @@
-import type { DomNodeData } from './elements.types';
+import type { DomNodeData } from "./elements.types";
 
 let selectedElement = $state<HTMLElement | null>(null);
 let inspectMode = $state(false);
@@ -13,7 +13,7 @@ export const elementsState = {
   select(el: HTMLElement | null): void {
     selectedElement = el;
     try {
-      window.dispatchEvent(new CustomEvent('oklish:selected-element', { detail: el }));
+      window.dispatchEvent(new CustomEvent("oklish:selected-element", { detail: el }));
     } catch (e) {
       // ignore in non-browser environments
     }
@@ -25,7 +25,7 @@ export const elementsState = {
   setInspect(v: boolean): void {
     inspectMode = v;
     try {
-      window.dispatchEvent(new CustomEvent('oklish:inspect-mode', { detail: v }));
+      window.dispatchEvent(new CustomEvent("oklish:inspect-mode", { detail: v }));
     } catch (e) {
       // ignore in non-browser environments
     }

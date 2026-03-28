@@ -1,4 +1,4 @@
-import { STORAGE_PREFIX } from '../core/constants';
+import { STORAGE_PREFIX } from "../core/constants";
 
 export const storageKeys = {
   window: `${STORAGE_PREFIX}window`,

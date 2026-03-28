@@ -1,4 +1,4 @@
-import type { InterceptorHandle, CapturedRequest } from './interceptor.types';
+import type { CapturedRequest, InterceptorHandle } from "./interceptor.types";
 
 type RequestCallback = (entry: CapturedRequest) => void;
 
@@ -11,18 +11,16 @@ export function interceptFetch(callback: RequestCallback): InterceptorHandle {
     const id = `fetch_${idCounter++}`;
     const startTime = performance.now();
 
-    const url = typeof input === 'string'
-      ? input
-      : input instanceof URL
-        ? input.href
-        : input.url;
+    const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
 
-    const method = init?.method ?? 'GET';
+    const method = init?.method ?? "GET";
 
     const requestHeaders: Record<string, string> = {};
     if (init?.headers) {
       const h = new Headers(init.headers);
-      h.forEach((value, key) => { requestHeaders[key] = value; });
+      h.forEach((value, key) => {
+        requestHeaders[key] = value;
+      });
     }
 
     try {
@@ -30,7 +28,9 @@ export function interceptFetch(callback: RequestCallback): InterceptorHandle {
       const endTime = performance.now();
 
       const responseHeaders: Record<string, string> = {};
-      response.headers.forEach((value, key) => { responseHeaders[key] = value; });
+      response.headers.forEach((value, key) => {
+        responseHeaders[key] = value;
+      });
 
       const clone = response.clone();
       let responseBody: unknown = null;
@@ -39,8 +39,14 @@ export function interceptFetch(callback: RequestCallback): InterceptorHandle {
       try {
         const text = await clone.text();
         size = new Blob([text]).size;
-        try { responseBody = JSON.parse(text); } catch { responseBody = text; }
-      } catch { /* empty */ }
+        try {
+          responseBody = JSON.parse(text);
+        } catch {
+          responseBody = text;
+        }
+      } catch {
+        /* empty */
+      }
 
       const entry: CapturedRequest = {
         id,
@@ -52,12 +58,12 @@ export function interceptFetch(callback: RequestCallback): InterceptorHandle {
         responseHeaders,
         requestBody: init?.body ?? null,
         responseBody,
-        responseType: responseHeaders['content-type'] ?? '',
+        responseType: responseHeaders["content-type"] ?? "",
         startTime,
         endTime,
         duration: endTime - startTime,
         size,
-        type: 'fetch',
+        type: "fetch",
       };
 
       callback(entry);
@@ -69,17 +75,17 @@ export function interceptFetch(callback: RequestCallback): InterceptorHandle {
         method: method.toUpperCase(),
         url,
         status: 0,
-        statusText: 'Network Error',
+        statusText: "Network Error",
         requestHeaders,
         responseHeaders: {},
         requestBody: init?.body ?? null,
         responseBody: null,
-        responseType: '',
+        responseType: "",
         startTime,
         endTime,
         duration: endTime - startTime,
         size: 0,
-        type: 'fetch',
+        type: "fetch",
         error: error instanceof Error ? error.message : String(error),
       };
 

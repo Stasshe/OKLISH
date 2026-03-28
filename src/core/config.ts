@@ -1,9 +1,9 @@
-import type { OKLISHConfig } from './config.types';
+import type { OKLISHConfig } from "./config.types";
 
 const DEFAULT_CONFIG: OKLISHConfig = {
-  theme: 'dark',
-  defaultPanel: 'console',
-  windowMode: 'floating',
+  theme: "dark",
+  defaultPanel: "console",
+  windowMode: "floating",
   plugins: [],
   persistState: true,
 };

@@ -18,6 +18,8 @@ export function throttle<T extends (...args: unknown[]) => void>(
     if (throttled) return;
     fn(...args);
     throttled = true;
-    setTimeout(() => { throttled = false; }, limit);
+    setTimeout(() => {
+      throttled = false;
+    }, limit);
   };
 }
