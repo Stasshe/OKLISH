@@ -1,4 +1,5 @@
 import OKLISH from '../src/index';
+import './idb-test';
 
 // Initialize OKLISH devtools
 OKLISH.init({

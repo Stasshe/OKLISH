@@ -59,6 +59,17 @@
     <button onclick="document.cookie='testcookie=value' + Date.now()">Set Cookie</button>
   </div>
 
+  <div class="card">
+    <h2>IndexedDB Tests</h2>
+    <button onclick="createTestDB()">Create/Open DB</button>
+    <button onclick="addTestEntry()">Add entry</button>
+    <button onclick="populateMany(50)">Populate 50</button>
+    <button onclick="getAllEntries()">Show entries (console + panel)</button>
+    <button onclick="clearTestStore()">Clear store</button>
+    <button onclick="deleteTestDB()">Delete DB</button>
+    <pre id="idb-output" style="height:160px;overflow:auto;background:#fbfbfb;padding:8px;border-radius:6px;border:1px solid #eee;margin-top:8px;font-size:12px;"></pre>
+  </div>
+
   <div class="card" id="dom-test">
     <h2>DOM Test</h2>
     <div class="nested">

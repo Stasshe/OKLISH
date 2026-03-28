@@ -2,6 +2,7 @@
   import { themeState } from '../../theme/theme.svelte.ts';
   import { applicationState } from './application.svelte.ts';
   import StorageViewer from './StorageViewer.svelte';
+  import IDBViewer from './IDBViewer.svelte';
   import ServiceWorkerInfo from './ServiceWorkerInfo.svelte';
   import type { StorageType } from './application.types';
 
@@ -11,6 +12,7 @@
     { name: 'localStorage', label: 'Local Storage' },
     { name: 'sessionStorage', label: 'Session Storage' },
     { name: 'cookies', label: 'Cookies' },
+    { name: 'indexedDB', label: 'Indexed DB' },
   ];
 
   let showSW = $state(false);
@@ -43,7 +45,11 @@
     {#if showSW}
       <ServiceWorkerInfo />
     {:else}
-      <StorageViewer />
+      {#if applicationState.activeStorage === 'indexedDB'}
+        <IDBViewer />
+      {:else}
+        <StorageViewer />
+      {/if}
     {/if}
   </div>
 </div>
