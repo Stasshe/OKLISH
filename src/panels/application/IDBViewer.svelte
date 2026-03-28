@@ -1,38 +1,19 @@
 <script lang="ts">
   import { themeState } from '../../theme/theme.svelte.ts';
   import * as idb from './idb';
-  import SearchInput from '../../ui/SearchInput.svelte';
+  import JsonViewer from '../../ui/JsonViewer.svelte';
 
   const colors = $derived(themeState.theme.colors);
 
   let databases = $state<{ name: string; version?: number }[]>([]);
-  let selectedDb = $state<string | null>(null);
-  let objectStores = $state<string[]>([]);
-  let selectedStore = $state<string | null>(null);
-  let entries = $state<{ key: any; value: any }[]>([]);
+  let objectStores = $state<Record<string, string[]>>({});
+  let entries = $state<Record<string, Record<string, idb.IDBEntry[]>>>({});
+  let expanded = $state<Record<string, boolean>>({});
+  let editingId = $state<string | null>(null);
+  let editingValue = $state<string>('');
+  let editError = $state<string>('');
   let loading = $state(false);
   let refreshKey = $state(0);
-  let expanded: Record<number, boolean> = {};
-
-  const columns = $derived.by(() => {
-    if (entries.length === 0) return ['key', 'value'];
-    const keys = new Set<string>();
-    // Always include key
-    keys.add('__key');
-    
-    // Sample first 10 entries to find property names
-    for (let i = 0; i < Math.min(entries.length, 10); i++) {
-      const val = entries[i].value;
-      if (val && typeof val === 'object' && !Array.isArray(val)) {
-        Object.keys(val).forEach(k => keys.add(k));
-      }
-    }
-    
-    // If we only found __key, it's a simple value store
-    if (keys.size === 1) return ['__key', 'value'];
-    
-    return Array.from(keys);
-  });
 
   function refresh() {
     refreshKey++;
@@ -41,72 +22,105 @@
 
   async function loadDatabases() {
     loading = true;
-    databases = await idb.listDatabases();
-    if (databases.length > 0) {
-      if (!selectedDb || !databases.some(d => d.name === selectedDb)) selectedDb = databases[0].name;
-      await loadObjectStores(selectedDb);
-    } else {
-      selectedDb = null;
-      objectStores = [];
-      selectedStore = null;
-      entries = [];
-    }
-    loading = false;
-  }
-
-  async function loadObjectStores(dbName: string | null) {
-    if (!dbName) {
-      objectStores = [];
-      selectedStore = null;
-      entries = [];
-      return;
-    }
-    objectStores = await idb.getObjectStoreNames(dbName);
-    selectedStore = objectStores[0] ?? null;
-    if (selectedStore) await loadEntries(dbName, selectedStore);
-  }
-
-  async function loadEntries(dbName: string | null, storeName: string | null) {
-    if (!dbName || !storeName) {
-      entries = [];
-      return;
-    }
-    loading = true;
-    entries = await idb.getEntries(dbName, storeName);
-    loading = false;
-  }
-
-  async function handleDeleteDb(name: string | null) {
-    if (!name) return;
-    if (!confirm(`Delete database "${name}"? This is irreversible.`)) return;
-    await idb.deleteDatabase(name);
-    await loadDatabases();
-  }
-
-  async function handleClearStore(dbName: string | null, storeName: string | null) {
-    if (!dbName || !storeName) return;
-    if (!confirm(`Clear object store "${storeName}" from "${dbName}"? This will remove all entries.`)) return;
-    await idb.clearObjectStore(dbName, storeName);
-    await loadEntries(dbName, storeName);
-  }
-
-  async function handleDeleteEntry(dbName: string | null, storeName: string | null, key: any) {
-    if (!dbName || !storeName) return;
-    if (!confirm(`Delete entry with key "${String(key)}"?`)) return;
-    await idb.deleteEntry(dbName, storeName, key);
-    await loadEntries(dbName, storeName);
-  }
-
-  function pretty(value: any) {
     try {
-      return typeof value === 'string' ? value : JSON.stringify(value, null, 2);
-    } catch {
-      try {
-        return String(value);
-      } catch {
-        return '[Unserializable]';
+      databases = await idb.listDatabases();
+      objectStores = {};
+      entries = {};
+      for (const db of databases) {
+        await loadStores(db.name);
       }
+    } finally {
+      loading = false;
     }
+  }
+
+  async function loadStores(dbName: string) {
+    try {
+      objectStores[dbName] = await idb.getObjectStoreNames(dbName);
+      entries[dbName] = {};
+      for (const store of objectStores[dbName]) {
+        await loadEntries(dbName, store);
+      }
+    } catch (err) {
+      console.error(`Failed to load stores for ${dbName}:`, err);
+    }
+  }
+
+  async function loadEntries(dbName: string, storeName: string) {
+    try {
+      const ents = await idb.getEntries(dbName, storeName);
+      if (!entries[dbName]) entries[dbName] = {};
+      entries[dbName][storeName] = ents;
+    } catch (err) {
+      console.error(`Failed to load entries for ${dbName}.${storeName}:`, err);
+    }
+  }
+
+  async function handleDeleteDb(name: string) {
+    if (!confirm(`Delete database "${name}"? This is irreversible.`)) return;
+    try {
+      await idb.deleteDatabase(name);
+      await refresh();
+    } catch (err) {
+      console.error('Failed to delete database:', err);
+    }
+  }
+
+  async function handleClearStore(dbName: string, storeName: string) {
+    if (!confirm(`Clear object store "${storeName}"? This will remove all entries.`)) return;
+    try {
+      await idb.clearObjectStore(dbName, storeName);
+      await loadEntries(dbName, storeName);
+    } catch (err) {
+      console.error('Failed to clear store:', err);
+    }
+  }
+
+  async function handleDeleteEntry(dbName: string, storeName: string, key: any) {
+    if (!confirm(`Delete entry?`)) return;
+    try {
+      await idb.deleteEntry(dbName, storeName, key);
+      await loadEntries(dbName, storeName);
+    } catch (err) {
+      console.error('Failed to delete entry:', err);
+    }
+  }
+
+  function startEdit(id: string, currentValue: any) {
+    editingId = id;
+    editingValue = typeof currentValue === 'string' ? currentValue : JSON.stringify(currentValue, null, 2);
+    editError = '';
+  }
+
+  async function saveEdit(dbName: string, storeName: string, key: any, isSimpleValue: boolean) {
+    try {
+      let newValue: any;
+      if (isSimpleValue && !editingValue.includes('{') && !editingValue.includes('[')) {
+        newValue = editingValue;
+      } else {
+        newValue = JSON.parse(editingValue);
+      }
+      await idb.updateEntry(dbName, storeName, key, newValue);
+      editingId = null;
+      editError = '';
+      await loadEntries(dbName, storeName);
+    } catch (err: any) {
+      editError = err.message || 'Failed to save';
+    }
+  }
+
+  function cancelEdit() {
+    editingId = null;
+    editingValue = '';
+    editError = '';
+  }
+
+  function toggleNode(id: string) {
+    expanded[id] = !expanded[id];
+  }
+
+  function isSimpleValue(value: any): boolean {
+    return typeof value !== 'object' || value === null || value instanceof Date;
   }
 
   $effect(() => {
@@ -114,113 +128,155 @@
   });
 </script>
 
-<div class="idb-viewer" style="height:100%;display:flex;flex-direction:column;font-size:11px;color:{colors.text};">
-  <div class="toolbar" style="border-bottom:1px solid {colors.border};background:{colors.bgSecondary};padding:6px;display:flex;gap:8px;align-items:center;">
-    <button class="action-btn" style="color:{colors.textSecondary};" title="Refresh" onclick={refresh}>↻</button>
-    {#if selectedDb}
-      <button class="action-btn" style="color:{colors.error};" title="Delete database" onclick={() => handleDeleteDb(selectedDb)}>🗑 Delete DB</button>
-    {/if}
-    {#if selectedStore}
-      <button class="action-btn" style="color:{colors.error};" title="Clear store" onclick={() => handleClearStore(selectedDb, selectedStore)}>⊘ Clear Store</button>
-    {/if}
+<div class="idb-viewer" style="height:100%;display:flex;flex-direction:column;font-size:12px;color:{colors.text};">
+  <div class="toolbar" style="border-bottom:1px solid {colors.border};background:{colors.bgSecondary};padding:6px 8px;display:flex;gap:8px;align-items:center;">
+    <button type="button" class="action-btn" style="color:{colors.textSecondary};" title="Refresh" onclick={refresh}>↻</button>
   </div>
 
-  <div class="body" style="display:flex;flex:1;min-height:0;">
-    <div class="col db-list" style="width:220px;border-right:1px solid {colors.border};overflow:auto;">
-      <div class="section-label" style="padding:6px 8px;color:{colors.textMuted};">Databases</div>
-      {#if databases.length > 0}
-        {#each databases as db}
-          <button type="button" class="db-row" class:active={db.name === selectedDb} style="padding:6px 8px;text-align:left;border:0;background:none;width:100%;cursor:pointer;border-bottom:1px solid {colors.border}22;" onclick={() => { selectedDb = db.name; loadObjectStores(selectedDb); }}>
-            <span style="display:block;font-weight:600;color:{db.name === selectedDb ? colors.text : colors.textSecondary};">{db.name}</span>
-            <span style="display:block;font-size:11px;color:{colors.textMuted};">v{db.version ?? '—'}</span>
+  <div class="content" style="flex:1;overflow:auto;">
+    {#if loading}
+      <div style="padding:12px;color:{colors.textMuted};">Loading…</div>
+    {/if}
+
+    {#each databases as db}
+      <div class="node" style="margin-left:0;display:flex;flex-direction:column;">
+        <!-- Database row -->
+        <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid {colors.border}22;transition:background 0.1s;" class="row-hover">
+          <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:12px;padding:0 4px;font-weight:bold;" onclick={() => toggleNode(`db-${db.name}`)}>
+            {expanded[`db-${db.name}`] ? '▼' : '▶'}
           </button>
-        {/each}
-      {:else}
-        <div class="empty" style="padding:12px;color:{colors.textMuted};">No databases found or browser doesn't expose databases()</div>
-      {/if}
-    </div>
+          <span style="color:{colors.accent};font-weight:600;flex:1;">
+            📦 {db.name}
+            <span style="color:{colors.textMuted};font-size:11px;margin-left:6px;">v{db.version ?? '—'}</span>
+          </span>
+          <button type="button" class="action-btn" style="color:{colors.error};" title="Delete database" onclick={() => handleDeleteDb(db.name)}>🗑</button>
+        </div>
 
-    <div class="col store-list" style="width:200px;border-right:1px solid {colors.border};overflow:auto;">
-      <div class="section-label" style="padding:6px 8px;color:{colors.textMuted};">Object Stores</div>
-      {#if objectStores.length > 0}
-        {#each objectStores as s}
-          <button type="button" class="store-row" class:active={s === selectedStore} style="padding:6px 8px;text-align:left;border:0;background:none;width:100%;cursor:pointer;border-bottom:1px solid {colors.border}22;" onclick={() => { selectedStore = s; loadEntries(selectedDb, selectedStore); }}>
-            <span style="color:{s === selectedStore ? colors.text : colors.textSecondary};">{s}</span>
-          </button>
-        {/each}
-      {:else}
-        <div class="empty" style="padding:12px;color:{colors.textMuted};">No object stores</div>
-      {/if}
-    </div>
+        <!-- Object stores -->
+        {#if expanded[`db-${db.name}`]}
+          {#if objectStores[db.name]}
+            {#each objectStores[db.name] as storeName}
+              <div class="node" style="margin-left:16px;display:flex;flex-direction:column;">
+                <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid {colors.border}22;transition:background 0.1s;" class="row-hover">
+                  <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:12px;padding:0 4px;font-weight:bold;" onclick={() => toggleNode(`store-${db.name}|${storeName}`)}>
+                    {expanded[`store-${db.name}|${storeName}`] ? '▼' : '▶'}
+                  </button>
+                  <span style="color:{colors.textSecondary};font-weight:500;flex:1;">📋 {storeName}</span>
+                  <button type="button" class="action-btn" style="color:{colors.error};" title="Clear store" onclick={() => handleClearStore(db.name, storeName)}>⊘</button>
+                </div>
 
-    <div class="col entries" style="flex:1;overflow:auto;display:flex;flex-direction:column;">
-      <div class="table-container" style="flex:1;overflow:auto;">
-        <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-          <thead style="position:sticky;top:0;background:{colors.bgSecondary};z-index:2;">
-            <tr>
-              <th style="width:24px;border-bottom:1px solid {colors.border};"></th>
-              {#each columns as col}
-                <th style="padding:6px 8px;text-align:left;font-weight:600;color:{colors.textMuted};border-bottom:1px solid {colors.border};border-right:1px solid {colors.border}22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                  {col === '__key' ? 'Key' : col}
-                </th>
-              {/each}
-              <th style="width:40px;border-bottom:1px solid {colors.border};"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {#if loading}
-              <tr>
-                <td colspan={columns.length + 2} style="padding:12px;text-align:center;color:{colors.textMuted};">Loading…</td>
-              </tr>
-            {/if}
+                <!-- Entries -->
+                {#if expanded[`store-${db.name}|${storeName}`]}
+                  {#if entries[db.name]?.[storeName]}
+                    {#each entries[db.name][storeName] as entry}
+                      <div class="node" style="margin-left:16px;display:flex;flex-direction:column;">
+                        <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid {colors.border}22;transition:background 0.1s;" class="row-hover">
+                          <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:12px;padding:0 4px;font-weight:bold;" onclick={() => toggleNode(`entry-${db.name}|${storeName}|${String(entry.key)}`)}>
+                            {expanded[`entry-${db.name}|${storeName}|${String(entry.key)}`] ? '▼' : '▶'}
+                          </button>
+                          <span style="color:{colors.accent};font-family:'SF Mono', Monaco, monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                            {String(entry.key)}
+                          </span>
+                          <button type="button" class="action-btn" style="color:{colors.warning};" title="Edit entry" onclick={() => startEdit(`entry-${db.name}|${storeName}|${String(entry.key)}`, entry.value)}>🖊</button>
+                          <button type="button" class="action-btn" style="color:{colors.error};" title="Delete entry" onclick={() => handleDeleteEntry(db.name, storeName, entry.key)}>✕</button>
+                        </div>
 
-            {#each entries as e, i (i)}
-              <tr class="row" style="border-bottom:1px solid {colors.border}22;">
-                <td style="text-align:center;">
-                  <button class="action-btn" title="Toggle" onclick={() => { expanded[i] = !expanded[i]; }}>{expanded[i] ? '▴' : '▾'}</button>
-                </td>
-                {#each columns as col}
-                  <td style="padding:4px 8px;border-right:1px solid {colors.border}11;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'SF Mono', Monaco, monospace;">
-                    {#if col === '__key'}
-                      <span style="color:{colors.accent};">{String(e.key)}</span>
-                    {:else if col === 'value'}
-                      {pretty(e.value).slice(0,100)}
-                    {:else}
-                      {e.value?.[col] !== undefined ? pretty(e.value[col]).slice(0,100) : ''}
-                    {/if}
-                  </td>
-                {/each}
-                <td style="text-align:center;">
-                  <button class="action-btn" style="color:{colors.error};" title="Delete entry" onclick={() => handleDeleteEntry(selectedDb, selectedStore, e.key)}>✕</button>
-                </td>
-              </tr>
-              {#if expanded[i]}
-                <tr>
-                  <td colspan={columns.length + 2} style="padding:8px 12px;background:{colors.bg};border-bottom:1px solid {colors.border};">
-                    <pre style="white-space:pre-wrap;margin:0;color:{colors.text};font-size:11px;">{pretty(e.value)}</pre>
-                  </td>
-                </tr>
-              {/if}
+                        <!-- Entry detail -->
+                        {#if expanded[`entry-${db.name}|${storeName}|${String(entry.key)}`]}
+                          <div style="margin-left:16px;padding:8px;border-left:1px solid {colors.border}33;background:{colors.bg};">
+                            {#if editingId === `entry-${db.name}|${storeName}|${String(entry.key)}`}
+                              <div style="display:flex;flex-direction:column;gap:6px;">
+                                {#if isSimpleValue(entry.value)}
+                                  <input
+                                    type="text"
+                                    value={editingValue}
+                                    placeholder="Enter value"
+                                    onchange={(e) => { editingValue = (e.target as HTMLInputElement).value; }}
+                                    style="padding:6px 8px;background:{colors.bgSecondary};color:{colors.text};border:1px solid {colors.border};border-radius:4px;font-family:'SF Mono', Monaco, monospace;font-size:11px;"
+                                  />
+                                {:else}
+                                  <textarea
+                                    rows="8"
+                                    value={editingValue}
+                                    placeholder="Enter JSON"
+                                    onchange={(e) => { editingValue = (e.target as HTMLTextAreaElement).value; }}
+                                    style="padding:6px 8px;background:{colors.bgSecondary};color:{colors.text};border:1px solid {colors.border};border-radius:4px;font-family:'SF Mono', Monaco, monospace;font-size:11px;resize:vertical;"
+                                  ></textarea>
+                                {/if}
+                                {#if editError}
+                                  <div style="color:{colors.error};font-size:11px;">{editError}</div>
+                                {/if}
+                                <div style="display:flex;gap:6px;">
+                                  <button
+                                    type="button"
+                                    class="action-btn"
+                                    style="color:{colors.success};padding:4px 12px;background:{colors.bgSecondary};border:1px solid {colors.success};border-radius:4px;"
+                                    onclick={() => saveEdit(db.name, storeName, entry.key, isSimpleValue(entry.value))}
+                                  >
+                                    ✓ Save
+                                  </button>
+                                  <button
+                                    type="button"
+                                    class="action-btn"
+                                    style="color:{colors.textSecondary};padding:4px 12px;background:{colors.bgSecondary};border:1px solid {colors.border};border-radius:4px;"
+                                    onclick={cancelEdit}
+                                  >
+                                    ✕ Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            {:else}
+                              <div style="font-size:11px;font-family:'SF Mono', Monaco, monospace;">
+                                <JsonViewer data={entry.value} />
+                              </div>
+                            {/if}
+                          </div>
+                        {/if}
+                      </div>
+                    {/each}
+                  {/if}
+                {/if}
+              </div>
             {/each}
-
-            {#if entries.length === 0 && !loading}
-              <tr>
-                <td colspan={columns.length + 2} style="padding:12px;text-align:center;color:{colors.textMuted};">No entries</td>
-              </tr>
-            {/if}
-          </tbody>
-        </table>
+          {/if}
+        {/if}
       </div>
-    </div>
+    {/each}
+
+    {#if databases.length === 0 && !loading}
+      <div style="padding:12px;color:{colors.textMuted};text-align:center;">No databases found</div>
+    {/if}
   </div>
 </div>
 
 <style>
-  .action-btn { background: none; border: none; cursor: pointer; font-size: 12px; padding: 2px 4px; }
-  .action-btn:hover { opacity: 0.8; }
-  .empty { text-align: center; }
-  table th, table td { 
-    font-size: 11px;
+  .idb-viewer {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
-  tr:hover { background: rgba(128, 128, 128, 0.05); }
+  .content {
+    display: flex;
+    flex-direction: column;
+  }
+  .node {
+    display: flex;
+    flex-direction: column;
+  }
+  .row-hover:hover {
+    background: rgba(128, 128, 128, 0.05);
+  }
+  .toggle-btn:hover {
+    opacity: 0.8;
+  }
+  .action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 6px;
+    opacity: 0.6;
+    transition: opacity 0.1s;
+  }
+  .action-btn:hover {
+    opacity: 1;
+  }
 </style>

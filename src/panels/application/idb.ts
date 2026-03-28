@@ -171,6 +171,30 @@ export async function clearObjectStore(dbName: string, storeName: string) {
   });
 }
 
+export async function updateEntry(dbName: string, storeName: string, key: IDBValidKey, newValue: any): Promise<void> {
+  const dbs = await listDatabases();
+  const info = dbs.find(d => d.name === dbName);
+  const db = await openDatabase(dbName, info?.version);
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const tx = db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      store.put(newValue, key);
+      tx.oncomplete = () => {
+        safeClose(db);
+        resolve();
+      };
+      tx.onerror = () => {
+        safeClose(db);
+        reject(tx.error ?? new Error('Transaction error'));
+      };
+    } catch (err) {
+      safeClose(db);
+      reject(err);
+    }
+  });
+}
+
 export function deleteDatabase(name: string): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
