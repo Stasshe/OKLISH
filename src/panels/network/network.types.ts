@@ -1,3 +1,24 @@
+export interface TimingPhase {
+  blocked: number;
+  dns: number;
+  connect: number;
+  send: number;
+  wait: number;
+  receive: number;
+  ssl: number;
+}
+
+export interface Cookie {
+  name: string;
+  value: string;
+  domain?: string;
+  path?: string;
+  secure?: boolean;
+  httpOnly?: boolean;
+  sameSite?: 'Strict' | 'Lax' | 'None';
+  expires?: string;
+}
+
 export interface NetworkRequest {
   id: string;
   method: string;
@@ -15,4 +36,13 @@ export interface NetworkRequest {
   size: number;
   type: 'fetch' | 'xhr';
   error?: string;
+
+  // New fields
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  protocol: string; // HTTP/1.1, HTTP/2, HTTP/3, etc.
+  domain: string; // parsed from URL
+  timingPhases: TimingPhase;
+  cookies: Cookie[];
+  ipAddress?: string;
+  resourceSize: number; // response body size
 }
