@@ -107,7 +107,7 @@ const groupedRequests = $derived.by(() => {
       if (!domainMap.has(req.domain)) {
         domainMap.set(req.domain, []);
       }
-      domainMap.get(req.domain)!.push(req);
+      domainMap.get(req.domain)?.push(req);
     }
 
     // Sort domains alphabetically

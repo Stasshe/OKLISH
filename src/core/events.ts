@@ -7,7 +7,7 @@ class EventBus {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(handler);
+    this.listeners.get(event)?.add(handler);
   }
 
   off(event: string, handler: EventHandler): void {

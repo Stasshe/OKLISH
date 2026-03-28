@@ -24,7 +24,7 @@ export async function listDatabases(): Promise<IDBDatabaseInfo[]> {
       const dbs = await idbAny.databases();
       if (!dbs) return [];
       return (dbs as any[])
-        .filter((d) => d && d.name)
+        .filter((d) => d?.name)
         .map((d) => ({ name: d.name as string, version: d.version as number | undefined }));
     } catch {
       return [];

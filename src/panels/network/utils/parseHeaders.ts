@@ -14,7 +14,7 @@ export function parseProtocol(
   _responseType: string,
 ): string {
   // Try to get from response headers first (some servers include it)
-  const serverHeader = responseHeaders["server"];
+  const serverHeader = responseHeaders.server;
   if (serverHeader?.includes("HTTP/2")) return "HTTP/2";
   if (serverHeader?.includes("HTTP/3")) return "HTTP/3";
 

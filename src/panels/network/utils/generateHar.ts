@@ -148,7 +148,7 @@ function generateHAR(requests: NetworkRequest[]): HAR {
                 ? JSON.stringify(req.responseBody)
                 : undefined,
         },
-        redirectURL: req.responseHeaders["location"] || "",
+        redirectURL: req.responseHeaders.location || "",
         headersSize: 0,
         bodySize: req.resourceSize,
       },

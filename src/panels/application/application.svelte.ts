@@ -1,7 +1,10 @@
 import type { StorageEntry, StorageType } from "./application.types";
+import { createPersistedState } from "../../storage/session.svelte.ts";
 
-let activeStorage = $state<StorageType>("localStorage");
-let searchQuery = $state("");
+const persisted = createPersistedState<{ activeStorage: StorageType; searchQuery: string }>(
+  "oklish:application",
+  { activeStorage: "localStorage", searchQuery: "" },
+);
 
 function getStorageEntries(type: StorageType): StorageEntry[] {
   if (type === "cookies") {
@@ -24,21 +27,21 @@ function getStorageEntries(type: StorageType): StorageEntry[] {
 
 export const applicationState = {
   get activeStorage(): StorageType {
-    return activeStorage;
+    return persisted.activeStorage;
   },
   get searchQuery(): string {
-    return searchQuery;
+    return persisted.searchQuery;
   },
   setStorage(type: StorageType): void {
-    activeStorage = type;
+    persisted.activeStorage = type;
   },
   setSearch(q: string): void {
-    searchQuery = q;
+    persisted.searchQuery = q;
   },
   getEntries(): StorageEntry[] {
-    const entries = getStorageEntries(activeStorage);
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+    const entries = getStorageEntries(persisted.activeStorage);
+    if (persisted.searchQuery) {
+      const q = persisted.searchQuery.toLowerCase();
       return entries.filter(
         (e) => e.key.toLowerCase().includes(q) || e.value.toLowerCase().includes(q),
       );
@@ -46,21 +49,21 @@ export const applicationState = {
     return entries;
   },
   removeEntry(key: string): void {
-    if (activeStorage === "cookies") {
+    if (persisted.activeStorage === "cookies") {
       document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     } else {
-      const store = activeStorage === "localStorage" ? localStorage : sessionStorage;
+      const store = persisted.activeStorage === "localStorage" ? localStorage : sessionStorage;
       store.removeItem(key);
     }
   },
   clearStorage(): void {
-    if (activeStorage === "cookies") {
+    if (persisted.activeStorage === "cookies") {
       document.cookie.split(";").forEach((c) => {
         const key = c.trim().split("=")[0];
         document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
       });
     } else {
-      const store = activeStorage === "localStorage" ? localStorage : sessionStorage;
+      const store = persisted.activeStorage === "localStorage" ? localStorage : sessionStorage;
       store.clear();
     }
   },

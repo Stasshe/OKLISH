@@ -15,12 +15,9 @@ function getSelectorString(el: Element | null) {
   const tag = el.tagName.toLowerCase();
   const he = el as HTMLElement;
   const id = he?.id ? `#${he.id}` : "";
-  const cls =
-    he?.classList && he.classList.length
-      ? "." + Array.from(he.classList).slice(0, 3).join(".")
-      : "";
+  const cls = he?.classList?.length ? `.${Array.from(he.classList).slice(0, 3).join(".")}` : "";
   const s = tag + id + cls;
-  return s.length > 48 ? s.slice(0, 45) + "..." : s;
+  return s.length > 48 ? `${s.slice(0, 45)}...` : s;
 }
 
 function createOverlay() {
@@ -54,12 +51,12 @@ function createOverlay() {
   function makeBox(className: string, style: Partial<CSSStyleDeclaration> = {}) {
     const d = document.createElement("div");
     d.setAttribute("data-oklish-overlay", "true");
-    d.className = "oklish-overlay " + className;
+    d.className = `oklish-overlay ${className}`;
     d.style.position = "fixed";
     d.style.pointerEvents = "none";
     d.style.boxSizing = "border-box";
     Object.assign(d.style, style as any);
-    overlayContainer!.appendChild(d);
+    overlayContainer?.appendChild(d);
     return d;
   }
 
@@ -75,7 +72,7 @@ function createOverlay() {
 
   // Insert overlay before the OKLISH host element so the host (and its shadow UI) renders above it.
   const host = typeof document !== "undefined" ? document.getElementById(HOST_ELEMENT_ID) : null;
-  if (host && host.parentElement) {
+  if (host?.parentElement) {
     host.parentElement.insertBefore(overlayContainer, host);
   } else {
     document.body.appendChild(overlayContainer);
@@ -122,19 +119,19 @@ function setBoxRect(el: Element | null) {
 
   // borderBox == rect
   if (borderBox) {
-    borderBox.style.top = rect.top + "px";
-    borderBox.style.left = rect.left + "px";
-    borderBox.style.width = rect.width + "px";
-    borderBox.style.height = rect.height + "px";
+    borderBox.style.top = `${rect.top}px`;
+    borderBox.style.left = `${rect.left}px`;
+    borderBox.style.width = `${rect.width}px`;
+    borderBox.style.height = `${rect.height}px`;
     borderBox.classList.add("visible");
   }
 
   // padding box = rect minus border
   if (paddingBox) {
-    paddingBox.style.top = rect.top + borderTop + "px";
-    paddingBox.style.left = rect.left + borderLeft + "px";
-    paddingBox.style.width = Math.max(0, rect.width - borderLeft - borderRight) + "px";
-    paddingBox.style.height = Math.max(0, rect.height - borderTop - borderBottom) + "px";
+    paddingBox.style.top = `${rect.top + borderTop}px`;
+    paddingBox.style.left = `${rect.left + borderLeft}px`;
+    paddingBox.style.width = `${Math.max(0, rect.width - borderLeft - borderRight)}px`;
+    paddingBox.style.height = `${Math.max(0, rect.height - borderTop - borderBottom)}px`;
     paddingBox.classList.add("visible");
   }
 
@@ -147,32 +144,32 @@ function setBoxRect(el: Element | null) {
       0,
       rect.height - borderTop - borderBottom - paddingTop - paddingBottom,
     );
-    contentBox.style.top = cTop + "px";
-    contentBox.style.left = cLeft + "px";
-    contentBox.style.width = cWidth + "px";
-    contentBox.style.height = cHeight + "px";
+    contentBox.style.top = `${cTop}px`;
+    contentBox.style.left = `${cLeft}px`;
+    contentBox.style.width = `${cWidth}px`;
+    contentBox.style.height = `${cHeight}px`;
     contentBox.classList.add("visible");
   }
 
   // margin box = rect expanded by margins
   if (marginBox) {
-    marginBox.style.top = rect.top - marginTop + "px";
-    marginBox.style.left = rect.left - marginLeft + "px";
-    marginBox.style.width = rect.width + marginLeft + marginRight + "px";
-    marginBox.style.height = rect.height + marginTop + marginBottom + "px";
+    marginBox.style.top = `${rect.top - marginTop}px`;
+    marginBox.style.left = `${rect.left - marginLeft}px`;
+    marginBox.style.width = `${rect.width + marginLeft + marginRight}px`;
+    marginBox.style.height = `${rect.height + marginTop + marginBottom}px`;
     marginBox.classList.add("visible");
   }
 
   // tooltip
   if (tooltip) {
-    const dims = Math.round(rect.width) + " × " + Math.round(rect.height);
+    const dims = `${Math.round(rect.width)} × ${Math.round(rect.height)}`;
     const selector = getSelectorString(el);
-    tooltip.textContent = selector + " — " + dims;
+    tooltip.textContent = `${selector} — ${dims}`;
     // place tooltip above element if possible
     const ttLeft = Math.max(6, rect.left);
     const ttTop = Math.max(6, rect.top - 34);
-    tooltip.style.left = ttLeft + "px";
-    tooltip.style.top = ttTop + "px";
+    tooltip.style.left = `${ttLeft}px`;
+    tooltip.style.top = `${ttTop}px`;
     tooltip.classList.add("visible");
   }
 }
@@ -180,7 +177,7 @@ function setBoxRect(el: Element | null) {
 function pickElementFromPoint(x: number, y: number): Element | null {
   let el = document.elementFromPoint(x, y);
   // if overlay contains it, walk up until real element
-  while (el && el.hasAttribute && el.hasAttribute("data-oklish-overlay")) {
+  while (el?.hasAttribute?.("data-oklish-overlay")) {
     el = el.parentElement;
   }
   return el;
