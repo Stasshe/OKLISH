@@ -1,4 +1,5 @@
 import { elementsState } from './elements.svelte.ts';
+import { HOST_ELEMENT_ID } from '../../core/constants.ts';
 
 let overlayContainer: HTMLDivElement | null = null;
 let marginBox: HTMLDivElement | null = null;
@@ -18,7 +19,8 @@ function createOverlay() {
   overlayContainer.style.width = '100%';
   overlayContainer.style.height = '100%';
   overlayContainer.style.pointerEvents = 'none';
-  overlayContainer.style.zIndex = '2147483647';
+  // keep overlay below OKLISH host element
+  overlayContainer.style.zIndex = '9999';
   overlayContainer.setAttribute('data-oklish-overlay', 'true');
 
   function makeBox(className: string, style: Partial<CSSStyleDeclaration> = {}) {
@@ -48,10 +50,17 @@ function createOverlay() {
   tooltip.style.background = 'rgba(32,33,36,0.95)';
   tooltip.style.color = '#fff';
   tooltip.style.borderRadius = '4px';
-  tooltip.style.zIndex = '2147483648';
+  // tooltip should also be below OKLISH UI
+  tooltip.style.zIndex = '2147483646';
   overlayContainer.appendChild(tooltip);
 
-  document.body.appendChild(overlayContainer);
+  // Insert overlay before the OKLISH host element so the host (and its shadow UI) renders above it.
+  const host = typeof document !== 'undefined' ? document.getElementById(HOST_ELEMENT_ID) : null;
+  if (host && host.parentElement) {
+    host.parentElement.insertBefore(overlayContainer, host);
+  } else {
+    document.body.appendChild(overlayContainer);
+  }
 }
 
 function removeOverlay() {
@@ -192,13 +201,3 @@ if (typeof window !== 'undefined') {
     setBoxRect(el);
   });
 }
-
-export const inspectOverlay = {
-  enable,
-  disable,
-  setElement(el: Element | null) {
-    if (!el) return;
-    createOverlay();
-    setBoxRect(el);
-  },
-};
