@@ -42,7 +42,6 @@ const config = {
         dev: !production,
         runes: true,
         css: 'injected',
-        compatibility: { componentApi: '4' },
       },
       emitCss: false,
     }),

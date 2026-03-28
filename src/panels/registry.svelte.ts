@@ -9,9 +9,6 @@ function loadActivePanel(): string {
 let panels = $state<PanelDefinition[]>([]);
 let activePanel = $state<string>(loadActivePanel());
 
-$effect(() => {
-  sessionStorage.setItem(PANEL_KEY, activePanel);
-});
 
 export const panelRegistry = {
   get panels(): PanelDefinition[] {
@@ -27,13 +24,19 @@ export const panelRegistry = {
   },
   unregister(name: string): void {
     panels = panels.filter((p) => p.name !== name);
-    if (activePanel === name && panels.length > 0) {
-      activePanel = panels[0].name;
+    if (activePanel === name) {
+      if (panels.length > 0) {
+        activePanel = panels[0].name;
+      } else {
+        activePanel = 'console';
+      }
+      sessionStorage.setItem(PANEL_KEY, activePanel);
     }
   },
   setActive(name: string): void {
     if (panels.find((p) => p.name === name)) {
       activePanel = name;
+      sessionStorage.setItem(PANEL_KEY, name);
     }
   },
   getActive(): string {
@@ -42,5 +45,6 @@ export const panelRegistry = {
   clear(): void {
     panels = [];
     activePanel = 'console';
+    sessionStorage.setItem(PANEL_KEY, 'console');
   },
 };

@@ -7,7 +7,8 @@
 
   async function loadRegistrations() {
     if ('serviceWorker' in navigator) {
-      registrations = await navigator.serviceWorker.getRegistrations();
+      const regs = await navigator.serviceWorker.getRegistrations();
+      registrations = Array.from(regs);
     }
   }
 

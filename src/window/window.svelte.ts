@@ -39,31 +39,36 @@ let height = $state(initial.height);
 let minimized = $state(initial.minimized);
 let dockedSize = $state(initial.dockedSize);
 
-$effect(() => {
+function saveState(): void {
   const snapshot = { mode, x, y, width, height, minimized, dockedSize };
-  sessionStorage.setItem(WINDOW_KEY, JSON.stringify(snapshot));
-});
+  try {
+    sessionStorage.setItem(WINDOW_KEY, JSON.stringify(snapshot));
+  } catch {
+    /* ignore */
+  }
+}
 
 export const windowState = {
   get mode() { return mode; },
-  set mode(v: WindowMode) { mode = v; },
+  set mode(v: WindowMode) { mode = v; saveState(); },
   get x() { return x; },
-  set x(v: number) { x = v; },
+  set x(v: number) { x = v; saveState(); },
   get y() { return y; },
-  set y(v: number) { y = v; },
+  set y(v: number) { y = v; saveState(); },
   get width() { return width; },
-  set width(v: number) { width = v; },
+  set width(v: number) { width = v; saveState(); },
   get height() { return height; },
-  set height(v: number) { height = v; },
+  set height(v: number) { height = v; saveState(); },
   get minimized() { return minimized; },
-  set minimized(v: boolean) { minimized = v; },
+  set minimized(v: boolean) { minimized = v; saveState(); },
   get dockedSize() { return dockedSize; },
-  set dockedSize(v: number) { dockedSize = v; },
+  set dockedSize(v: number) { dockedSize = v; saveState(); },
   get isFloating() { return mode === 'floating'; },
   get isDocked() { return mode !== 'floating'; },
   cycleMode(): void {
     const modes: WindowMode[] = ['floating', 'docked-bottom', 'docked-right', 'docked-left'];
     const idx = modes.indexOf(mode);
     mode = modes[(idx + 1) % modes.length];
+    saveState();
   },
 };
