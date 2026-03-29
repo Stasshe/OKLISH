@@ -128,7 +128,7 @@
   });
 </script>
 
-<div class="idb-viewer" style="height:100%;display:flex;flex-direction:column;font-size:12px;color:{colors.text};">
+<div class="idb-viewer" style="height:100%;display:flex;flex-direction:column;font-size:11px;color:{colors.text};">
   <div class="toolbar" style="border-bottom:1px solid {colors.border};background:{colors.bgSecondary};padding:6px 8px;display:flex;gap:8px;align-items:center;">
     <button type="button" class="action-btn" style="color:{colors.textSecondary};" title="Refresh" onclick={refresh}>↻</button>
   </div>
@@ -141,12 +141,12 @@
     {#each databases as db}
       <div class="node" style="margin-left:0;display:flex;flex-direction:column;">
         <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid {colors.border}22;transition:background 0.1s;" class="row-hover">
-          <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:12px;padding:0 4px;font-weight:bold;" onclick={() => toggleNode(`db-${db.name}`)}>
+          <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:11px;padding:0 3px;font-weight:bold;" onclick={() => toggleNode(`db-${db.name}`)}>
             {expanded[`db-${db.name}`] ? '▼' : '▶'}
           </button>
           <span style="color:{colors.accent};font-weight:600;flex:1;">
             📦 {db.name}
-            <span style="color:{colors.textMuted};font-size:11px;margin-left:6px;">v{db.version ?? '—'}</span>
+            <span style="color:{colors.textMuted};font-size:10px;margin-left:6px;">v{db.version ?? '—'}</span>
           </span>
           <button type="button" class="action-btn" style="color:{colors.error};" title="Delete database" onclick={() => handleDeleteDb(db.name)}>🗑</button>
         </div>
@@ -156,7 +156,7 @@
             {#each objectStores[db.name] as storeName}
               <div class="node" style="margin-left:16px;display:flex;flex-direction:column;">
                 <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid {colors.border}22;transition:background 0.1s;" class="row-hover">
-                  <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:12px;padding:0 4px;font-weight:bold;" onclick={() => toggleNode(`store-${db.name}|${storeName}`)}>
+                  <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:11px;padding:0 3px;font-weight:bold;" onclick={() => toggleNode(`store-${db.name}|${storeName}`)}>
                     {expanded[`store-${db.name}|${storeName}`] ? '▼' : '▶'}
                   </button>
                   <span style="color:{colors.textSecondary};font-weight:500;flex:1;">📋 {storeName}</span>
@@ -168,7 +168,7 @@
                     {#each entries[db.name][storeName] as entry}
                       <div class="node" style="margin-left:16px;display:flex;flex-direction:column;">
                         <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid {colors.border}22;transition:background 0.1s;" class="row-hover">
-                          <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:12px;padding:0 4px;font-weight:bold;" onclick={() => toggleNode(`entry-${db.name}|${storeName}|${String(entry.key)}`)}>
+                          <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:11px;padding:0 3px;font-weight:bold;" onclick={() => toggleNode(`entry-${db.name}|${storeName}|${String(entry.key)}`)}>
                             {expanded[`entry-${db.name}|${storeName}|${String(entry.key)}`] ? '▼' : '▶'}
                           </button>
                           <span style="color:{colors.accent};font-family:'SF Mono', Monaco, monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
@@ -188,15 +188,15 @@
                                     value={editingValue}
                                     placeholder="Enter value"
                                     onchange={(e) => { editingValue = (e.target as HTMLInputElement).value; }}
-                                    style="padding:6px 8px;background:{colors.bgSecondary};color:{colors.text};border:1px solid {colors.border};border-radius:4px;font-family:'SF Mono', Monaco, monospace;font-size:11px;"
+                                    style="padding:6px 8px;background:{colors.bgSecondary};color:{colors.text};border:1px solid {colors.border};border-radius:4px;font-family:'SF Mono', Monaco, monospace;font-size:10px;"
                                   />
                                 {:else}
                                   <textarea
-                                    rows="8"
+                                    rows="6"
                                     value={editingValue}
                                     placeholder="Enter JSON"
                                     onchange={(e) => { editingValue = (e.target as HTMLTextAreaElement).value; }}
-                                    style="padding:6px 8px;background:{colors.bgSecondary};color:{colors.text};border:1px solid {colors.border};border-radius:4px;font-family:'SF Mono', Monaco, monospace;font-size:11px;resize:vertical;"
+                                    style="padding:6px 8px;background:{colors.bgSecondary};color:{colors.text};border:1px solid {colors.border};border-radius:4px;font-family:'SF Mono', Monaco, monospace;font-size:10px;resize:vertical;"
                                   ></textarea>
                                 {/if}
                                 {#if editError}
@@ -206,7 +206,7 @@
                                   <button
                                     type="button"
                                     class="action-btn"
-                                    style="color:{colors.success};padding:4px 12px;background:{colors.bgSecondary};border:1px solid {colors.success};border-radius:4px;"
+                                    style="color:{colors.success};padding:3px 8px;background:{colors.bgSecondary};border:1px solid {colors.success};border-radius:4px;font-size:11px;"
                                     onclick={() => saveEdit(db.name, storeName, entry.key, isSimpleValue(entry.value))}
                                   >
                                     ✓ Save
@@ -214,7 +214,7 @@
                                   <button
                                     type="button"
                                     class="action-btn"
-                                    style="color:{colors.textSecondary};padding:4px 12px;background:{colors.bgSecondary};border:1px solid {colors.border};border-radius:4px;"
+                                    style="color:{colors.textSecondary};padding:3px 8px;background:{colors.bgSecondary};border:1px solid {colors.border};border-radius:4px;font-size:11px;"
                                     onclick={cancelEdit}
                                   >
                                     ✕ Cancel
@@ -267,8 +267,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 12px;
-    padding: 2px 6px;
+    font-size: 11px;
+    padding: 1px 6px;
     opacity: 0.6;
     transition: opacity 0.1s;
   }

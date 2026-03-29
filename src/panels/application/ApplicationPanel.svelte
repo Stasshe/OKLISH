@@ -55,20 +55,24 @@
 </div>
 
 <style>
-  .app-panel { display: flex; height: 100%; }
-  .sidebar { width: 160px; flex-shrink: 0; overflow-y: auto; padding: 4px 0; }
-  .section-label { padding: 6px 12px 2px; font-size: 10px; text-transform: uppercase; font-weight: 600; }
+  .app-panel { display: flex; height: 100%; font-size: 12px; }
+  .sidebar { width: 140px; flex-shrink: 0; overflow-y: auto; padding: 2px 0; }
+  .section-label { padding: 4px 10px 2px; font-size: 9px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px; }
   .nav-item {
     display: block;
     width: 100%;
     text-align: left;
     background: none;
     border: none;
-    padding: 4px 12px;
-    font-size: 12px;
+    padding: 4px 10px;
+    font-size: 11px;
+    line-height: 1.2;
     font-family: inherit;
     cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .nav-item:hover { opacity: 0.8; }
+  .nav-item:hover { opacity: 0.9; }
   .content { flex: 1; min-width: 0; }
 </style>

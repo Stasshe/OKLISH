@@ -43,18 +43,18 @@
 </div>
 
 <style>
-  .storage-viewer { height: 100%; display: flex; flex-direction: column; font-size: 11px; }
-  .toolbar { display: flex; align-items: center; gap: 6px; padding: 4px 8px; flex-shrink: 0; }
-  .action-btn { background: none; border: none; cursor: pointer; font-size: 14px; padding: 0 4px; }
+  .storage-viewer { height: 100%; display: flex; flex-direction: column; font-size: 10px; }
+  .toolbar { display: flex; align-items: center; gap: 6px; padding: 2px 6px; flex-shrink: 0; }
+  .action-btn { background: none; border: none; cursor: pointer; font-size: 12px; padding: 0 4px; }
   .action-btn:hover { opacity: 0.7; }
   .entries { flex: 1; overflow: auto; }
-  .header-row, .row { display: flex; padding: 3px 8px; gap: 8px; align-items: center; }
+  .header-row, .row { display: flex; padding: 2px 6px; gap: 6px; align-items: center; }
   .header-row { font-weight: 500; position: sticky; top: 0; z-index: 1; flex-shrink: 0; }
-  .col-key { width: 35%; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .col-val { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'SF Mono', Monaco, monospace; }
-  .col-action { width: 24px; flex-shrink: 0; }
-  .del-btn { background: none; border: none; cursor: pointer; font-size: 10px; padding: 0; opacity: 0.5; }
+  .col-key { width: 30%; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+  .col-val { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'SF Mono', Monaco, monospace; font-size: 10px; }
+  .col-action { width: 20px; flex-shrink: 0; }
+  .del-btn { background: none; border: none; cursor: pointer; font-size: 9px; padding: 0; opacity: 0.6; }
   .del-btn:hover { opacity: 1; }
   .row { cursor: default; }
-  .empty { padding: 20px; text-align: center; }
+  .empty { padding: 16px; text-align: center; font-size: 10px; }
 </style>
