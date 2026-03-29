@@ -1,7 +1,8 @@
 import type { ConsoleEntry } from "../panels/console/console.types";
 import { loadPersistedState, savePersistedState, clearPersistedState } from "./session.svelte.ts";
+import { STORAGE_KEYS } from "../core/constants";
 
-const STORAGE_KEY = "oklish:console.v1";
+const STORAGE_KEY = STORAGE_KEYS.CONSOLE_LOGS;
 
 export function loadConsoleData(): { entries: ConsoleEntry[] } {
   if (typeof window === "undefined") return { entries: [] };
