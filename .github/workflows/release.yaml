@@ -242,6 +242,7 @@ jobs:
       - name: NPM Publish
         if: github.event.inputs.prerelease == 'false'
         run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_KEY }}" > ~/.npmrc
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_KEY }}

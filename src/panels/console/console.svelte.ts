@@ -4,7 +4,17 @@ import { loadConsoleData, saveConsoleDataDebounced, clearConsoleData } from "../
 let initialEntries: ConsoleEntry[] = [];
 if (typeof window !== "undefined") {
   const data = loadConsoleData();
-  initialEntries = (data.entries as ConsoleEntry[]) || [];
+  const raw = (data.entries as ConsoleEntry[]) || [];
+  const seen = new Set<string>();
+  let sanitizeCounter = 0;
+  initialEntries = raw.map((e) => {
+    const copy = { ...e } as ConsoleEntry;
+    if (!copy.id || seen.has(copy.id)) {
+      copy.id = `sanitized_${Date.now()}_${sanitizeCounter++}`;
+    }
+    seen.add(copy.id);
+    return copy;
+  });
 }
 
 let entries = $state<ConsoleEntry[]>(initialEntries);
@@ -39,6 +49,18 @@ export const consoleState = {
     return searchQuery;
   },
   addEntry(entry: ConsoleEntry): void {
+    // Ensure incoming entry has a unique id to avoid keyed each collisions
+    const existingIds = new Set(entries.map((e) => e.id));
+    if (!entry.id || existingIds.has(entry.id)) {
+      let suffix = 0;
+      const base = entry.id ? String(entry.id) : "log";
+      let newId: string;
+      do {
+        newId = `${base}_${Date.now()}_${suffix++}`;
+      } while (existingIds.has(newId));
+      entry.id = newId;
+    }
+
     entries = [...entries, entry];
     saveConsoleDataDebounced(entries);
   },
