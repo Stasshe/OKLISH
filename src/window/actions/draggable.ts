@@ -53,8 +53,10 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
 
   function touchStart(e: TouchEvent) {
     if (p.ignoreSelector && (e.target as HTMLElement).closest(p.ignoreSelector)) return;
-    e.preventDefault();
-    e.stopPropagation();
+    if (e.cancelable) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const rect = node.getBoundingClientRect();
     p.onStart?.(rect);
     const startTouch = e.touches[0];

@@ -19,7 +19,7 @@
 
   const dragOptions = {
     handle: '.titlebar',
-    ignoreSelector: '.actions',
+    ignoreSelector: '.tab, .actions',
     onStart: () => {},
     onMove: (x: number, y: number) => {
       windowState.x = x;
