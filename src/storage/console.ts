@@ -15,7 +15,8 @@ function serializeValue(val: unknown): unknown {
   if (t === "string" || t === "number" || t === "boolean") return val;
   if (t === "undefined") return { __type: "undefined" };
   if (t === "function") return { __type: "function", name: (val as Function).name || "anonymous" };
-  if (val instanceof Error) return { __type: "Error", name: val.name, message: val.message, stack: val.stack };
+  if (val instanceof Error)
+    return { __type: "Error", name: val.name, message: val.message, stack: val.stack };
   if (val instanceof Date) return { __type: "Date", value: val.toISOString() };
 
   try {
@@ -29,7 +30,8 @@ function serializeValue(val: unknown): unknown {
           if (seen.has(v)) return "[Circular]";
           seen.add(v);
         }
-        if (v instanceof Error) return { __type: "Error", name: v.name, message: v.message, stack: v.stack };
+        if (v instanceof Error)
+          return { __type: "Error", name: v.name, message: v.message, stack: v.stack };
         if (v instanceof Date) return { __type: "Date", value: v.toISOString() };
         return v;
       });
@@ -63,4 +65,3 @@ export function clearConsoleData(): void {
   if (typeof window === "undefined") return;
   clearPersistedState(STORAGE_KEY);
 }
-

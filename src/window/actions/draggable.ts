@@ -13,7 +13,7 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
 
   function getHandle(): HTMLElement {
     if (!p || !p.handle) return node;
-    if (typeof p.handle === 'string') {
+    if (typeof p.handle === "string") {
       const found = node.querySelector(p.handle) as HTMLElement | null;
       return found ?? node;
     }
@@ -29,7 +29,7 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
     const startX = e.clientX;
     const startY = e.clientY;
     let moved = false;
-    const threshold = typeof p.threshold === 'number' ? p.threshold : 0;
+    const threshold = typeof p.threshold === "number" ? p.threshold : 0;
 
     function blockClick(ev: Event) {
       ev.preventDefault();
@@ -43,7 +43,7 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
       if (!moved) {
         moved = true;
         p.onStart?.(rect);
-        document.addEventListener('click', blockClick, true);
+        document.addEventListener("click", blockClick, true);
       }
       ev.preventDefault();
       p.onMove?.(Math.round(ev.clientX - offsetX), Math.round(ev.clientY - offsetY));
@@ -51,14 +51,14 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
 
     function onPointerUp() {
       if (moved) p.onEnd?.();
-      document.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("pointerup", onPointerUp);
       // keep the click blocker until the next tick so it can intercept the click
-      setTimeout(() => document.removeEventListener('click', blockClick, true), 0);
+      setTimeout(() => document.removeEventListener("click", blockClick, true), 0);
     }
 
-    document.addEventListener('pointermove', onPointerMove);
-    document.addEventListener('pointerup', onPointerUp);
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerup", onPointerUp);
 
     try {
       (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
@@ -76,7 +76,7 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
     const offsetX = startTouch.clientX - rect.left;
     const offsetY = startTouch.clientY - rect.top;
     let moved = false;
-    const threshold = typeof p.threshold === 'number' ? p.threshold : 0;
+    const threshold = typeof p.threshold === "number" ? p.threshold : 0;
 
     function blockClick(ev: Event) {
       ev.preventDefault();
@@ -91,7 +91,7 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
       if (!moved) {
         moved = true;
         p.onStart?.(rect);
-        document.addEventListener('click', blockClick, true);
+        document.addEventListener("click", blockClick, true);
       }
       ev.preventDefault();
       p.onMove?.(Math.round(t.clientX - offsetX), Math.round(t.clientY - offsetY));
@@ -99,26 +99,26 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
 
     function onTouchEnd() {
       if (moved) p.onEnd?.();
-      document.removeEventListener('touchmove', onTouchMove as EventListener);
-      document.removeEventListener('touchend', onTouchEnd as EventListener);
-      setTimeout(() => document.removeEventListener('click', blockClick, true), 0);
+      document.removeEventListener("touchmove", onTouchMove as EventListener);
+      document.removeEventListener("touchend", onTouchEnd as EventListener);
+      setTimeout(() => document.removeEventListener("click", blockClick, true), 0);
     }
 
     const addOpts: AddEventListenerOptions = { passive: false };
-    document.addEventListener('touchmove', onTouchMove as EventListener, addOpts);
-    document.addEventListener('touchend', onTouchEnd as EventListener);
+    document.addEventListener("touchmove", onTouchMove as EventListener, addOpts);
+    document.addEventListener("touchend", onTouchEnd as EventListener);
   }
 
   function addListeners() {
     handle = getHandle();
-    handle.addEventListener('pointerdown', pointerDown);
-    handle.addEventListener('touchstart', touchStart, opts);
+    handle.addEventListener("pointerdown", pointerDown);
+    handle.addEventListener("touchstart", touchStart, opts);
   }
 
   function removeListeners() {
     if (!handle) return;
-    handle.removeEventListener('pointerdown', pointerDown);
-    handle.removeEventListener('touchstart', touchStart);
+    handle.removeEventListener("pointerdown", pointerDown);
+    handle.removeEventListener("touchstart", touchStart);
   }
 
   addListeners();
@@ -131,6 +131,6 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
     },
     destroy() {
       removeListeners();
-    }
+    },
   };
 }

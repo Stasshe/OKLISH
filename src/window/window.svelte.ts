@@ -22,8 +22,14 @@ function loadState(): WindowState {
   } catch {
     /* empty */
   }
-  const defaultMinX = typeof window !== 'undefined' ? Math.max(16, window.innerWidth - (40 + 16)) : WINDOW_DEFAULTS.DEFAULT_X;
-  const defaultMinY = typeof window !== 'undefined' ? Math.max(16, window.innerHeight - (40 + 16)) : WINDOW_DEFAULTS.DEFAULT_Y;
+  const defaultMinX =
+    typeof window !== "undefined"
+      ? Math.max(16, window.innerWidth - (40 + 16))
+      : WINDOW_DEFAULTS.DEFAULT_X;
+  const defaultMinY =
+    typeof window !== "undefined"
+      ? Math.max(16, window.innerHeight - (40 + 16))
+      : WINDOW_DEFAULTS.DEFAULT_Y;
   return {
     mode: "floating",
     x: WINDOW_DEFAULTS.DEFAULT_X,
@@ -41,7 +47,7 @@ const initial = loadState();
 
 let mode = $state<WindowMode>(initial.mode);
 // Remember last docked position so toggle can restore it
-let lastDockedMode: WindowMode = initial.mode === 'floating' ? 'docked-bottom' : initial.mode;
+let lastDockedMode: WindowMode = initial.mode === "floating" ? "docked-bottom" : initial.mode;
 let x = $state(initial.x);
 let y = $state(initial.y);
 let width = $state(initial.width);
@@ -138,18 +144,18 @@ export const windowState = {
   },
   // Toggle between floating and the last docked position
   toggleFloating(): void {
-    if (mode === 'floating') {
+    if (mode === "floating") {
       mode = lastDockedMode;
     } else {
       lastDockedMode = mode;
-      mode = 'floating';
+      mode = "floating";
     }
     saveState();
   },
   // Cycle only through docked positions (docked-bottom -> docked-right -> docked-left -> ...)
   cycleDock(): void {
-    const docks: WindowMode[] = ['docked-bottom', 'docked-right', 'docked-left'];
-    if (mode === 'floating') {
+    const docks: WindowMode[] = ["docked-bottom", "docked-right", "docked-left"];
+    if (mode === "floating") {
       // If currently floating, restore last docked mode
       mode = lastDockedMode;
     } else {
@@ -161,7 +167,7 @@ export const windowState = {
   },
   // Explicitly set a docked mode
   setDockMode(m: WindowMode): void {
-    if (m !== 'floating') {
+    if (m !== "floating") {
       mode = m;
       lastDockedMode = m;
       saveState();

@@ -4,7 +4,6 @@ type LogCallback = (entry: CapturedLog) => void;
 
 const LOG_LEVELS: LogLevel[] = ["log", "warn", "error", "info", "debug"];
 
-
 export function interceptConsole(callback: LogCallback): InterceptorHandle {
   const originals = new Map<LogLevel, (...args: unknown[]) => void>();
 
