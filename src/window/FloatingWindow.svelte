@@ -5,6 +5,7 @@
   import { WINDOW_DEFAULTS } from '../core/constants';
   import Titlebar from './Titlebar.svelte';
   import ResizeHandle from './ResizeHandle.svelte';
+  import { draggable } from './actions/draggable';
 
   interface Props {
     onclose?: () => void;
@@ -15,85 +16,19 @@
 
   const colors = $derived(themeState.theme.colors);
 
-  let rootEl: HTMLElement | null = null;
 
-  let dragStartX = 0;
-  let dragStartY = 0;
-  let dragOffsetX = 0;
-  let dragOffsetY = 0;
-  let isDragging = false;
+  const dragOptions = {
+    handle: '.titlebar',
+    ignoreSelector: '.actions',
+    onStart: () => {},
+    onMove: (x: number, y: number) => {
+      windowState.x = x;
+      windowState.y = y;
+    },
+    onEnd: () => {}
+  };
   let activeResize = $state<string | null>(null);
 
-  function ondragstart(e: PointerEvent) {
-    if ((e.target as HTMLElement).closest('.actions')) return;
-    e.preventDefault();
-    e.stopPropagation();
-    if (!rootEl) return;
-
-    isDragging = true;
-
-    // Calculate pointer offset inside the window so the cursor stays
-    // at the same relative position while dragging.
-    const rect = rootEl.getBoundingClientRect();
-    const pointerOffsetX = e.clientX - rect.left;
-    const pointerOffsetY = e.clientY - rect.top;
-
-    function onpointermove(ev: PointerEvent) {
-      windowState.x = Math.round(ev.clientX - pointerOffsetX);
-      windowState.y = Math.round(ev.clientY - pointerOffsetY);
-    }
-
-    function onpointerup() {
-      isDragging = false;
-      document.removeEventListener('pointermove', onpointermove);
-      document.removeEventListener('pointerup', onpointerup);
-    }
-
-    // Attach to document to ensure we receive events even if the pointer
-    // leaves the titlebar or the window during the drag.
-    document.addEventListener('pointermove', onpointermove);
-    document.addEventListener('pointerup', onpointerup);
-
-    // Best-effort pointer capture on the original target if supported.
-    try {
-      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-    } catch {
-      /* ignore */
-    }
-  }
-
-  // Touch fallback for devices that don't provide PointerEvents (older iOS Safari)
-  function ondragstartTouch(e: TouchEvent) {
-    if ((e.target as HTMLElement).closest('.actions')) return;
-    e.preventDefault();
-    e.stopPropagation();
-    if (!rootEl) return;
-
-    isDragging = true;
-
-    // Calculate pointer offset inside the window for touch as well.
-    const rect = rootEl.getBoundingClientRect();
-    const startTouch = e.touches[0];
-    const pointerOffsetX = startTouch.clientX - rect.left;
-    const pointerOffsetY = startTouch.clientY - rect.top;
-
-    function ontouchmove(ev: TouchEvent) {
-      ev.preventDefault();
-      const t = ev.touches[0];
-      windowState.x = Math.round(t.clientX - pointerOffsetX);
-      windowState.y = Math.round(t.clientY - pointerOffsetY);
-    }
-
-    function ontouchend() {
-      isDragging = false;
-      document.removeEventListener('touchmove', ontouchmove as EventListenerOrEventListenerObject);
-      document.removeEventListener('touchend', ontouchend as EventListenerOrEventListenerObject);
-    }
-
-    const opts: AddEventListenerOptions = { passive: false };
-    document.addEventListener('touchmove', ontouchmove as EventListener, opts);
-    document.addEventListener('touchend', ontouchend as EventListener);
-  }
 
   let resizeStartW = 0;
   let resizeStartH = 0;
@@ -153,7 +88,7 @@
 
 <div
   class="floating-window"
-  bind:this={rootEl}
+  use:draggable={dragOptions}
   style="
     left:{windowState.x}px;
     top:{windowState.y}px;
@@ -168,7 +103,7 @@
     color:{colors.text};
   "
 >
-  <Titlebar {ondragstart} ondragstartTouch={ondragstartTouch} {onclose} />
+  <Titlebar {onclose} />
   <div class="content">
     {@render children()}
   </div>

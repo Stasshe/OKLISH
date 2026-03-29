@@ -1,5 +1,6 @@
 <script lang="ts">
   import { themeState } from '../theme/theme.svelte.ts';
+  import { resizable } from './actions/resizable';
 
   const colors = $derived(themeState.theme.colors);
 
@@ -12,64 +13,12 @@
   }
 
   let { position, onresize, onresizestart, onresizeend, active = false }: Props = $props();
-
-  function onpointerdown(e: PointerEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const target = e.currentTarget as HTMLElement;
-    onresizestart?.();
-    target.setPointerCapture(e.pointerId);
-
-    function onpointermove(ev: PointerEvent) {
-      const dx = ev.clientX - startX;
-      const dy = ev.clientY - startY;
-      onresize(dx, dy);
-    }
-
-    function onpointerup() {
-      onresizeend?.();
-      target.removeEventListener('pointermove', onpointermove);
-      target.removeEventListener('pointerup', onpointerup);
-    }
-
-    target.addEventListener('pointermove', onpointermove);
-    target.addEventListener('pointerup', onpointerup);
-  }
-
-  // Touch fallback for resize handles
-  function ontouchstart(e: TouchEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    const startX = e.touches[0].clientX;
-    const startY = e.touches[0].clientY;
-    onresizestart?.();
-
-    function onTouchMove(ev: TouchEvent) {
-      ev.preventDefault();
-      const dx = ev.touches[0].clientX - startX;
-      const dy = ev.touches[0].clientY - startY;
-      onresize(dx, dy);
-    }
-
-    function onTouchEnd() {
-      onresizeend?.();
-      document.removeEventListener('touchmove', onTouchMove as EventListener);
-      document.removeEventListener('touchend', onTouchEnd as EventListener);
-    }
-
-    const opts: AddEventListenerOptions = { passive: false };
-    document.addEventListener('touchmove', onTouchMove as EventListener, opts);
-    document.addEventListener('touchend', onTouchEnd as EventListener);
-  }
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   class="resize-handle resize-{position}"
-  onpointerdown={onpointerdown}
-  ontouchstart={ontouchstart}
+  use:resizable={{ position, onStart: onresizestart, onResize: onresize, onEnd: onresizeend }}
   style="background:{active ? colors.accent : 'transparent'};"
 ></div>
 
