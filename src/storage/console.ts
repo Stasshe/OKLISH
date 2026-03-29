@@ -64,20 +64,3 @@ export function clearConsoleData(): void {
   clearPersistedState(STORAGE_KEY);
 }
 
-export function computeNextLogId(): number {
-  if (typeof window === "undefined") return 0;
-  try {
-    const data = loadConsoleData();
-    const arr = Array.isArray(data.entries) ? data.entries : [];
-    let max = -1;
-    for (const e of arr) {
-      if (e && typeof e === "object" && typeof (e as any).id === "string" && (e as any).id.startsWith("log_")) {
-        const n = parseInt((e as any).id.slice(4), 10);
-        if (!Number.isNaN(n) && n > max) max = n;
-      }
-    }
-    return max + 1;
-  } catch {
-    return 0;
-  }
-}

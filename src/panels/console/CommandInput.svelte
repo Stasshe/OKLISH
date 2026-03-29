@@ -15,13 +15,13 @@
     history = [code, ...history].slice(0, 100);
     historyIndex = -1;
 
-    consoleState.addEntry({ id: `cmd_${Date.now()}`, level: 'log', args: [`> ${code}`], timestamp: Date.now() });
+    consoleState.addEntry({ id: `cmd_${crypto.randomUUID()}`, level: 'log', args: [`> ${code}`], timestamp: Date.now() });
 
     try {
       const result = await new Function(code)();
-      consoleState.addEntry({ id: `res_${Date.now()}`, level: 'log', args: [result], timestamp: Date.now() });
+      consoleState.addEntry({ id: `res_${crypto.randomUUID()}`, level: 'log', args: [result], timestamp: Date.now() });
     } catch (err) {
-      consoleState.addEntry({ id: `err_${Date.now()}`, level: 'error', args: [err instanceof Error ? err.message : String(err)], timestamp: Date.now(), stack: err instanceof Error ? err.stack : undefined });
+      consoleState.addEntry({ id: `err_${crypto.randomUUID()}`, level: 'error', args: [err instanceof Error ? err.message : String(err)], timestamp: Date.now(), stack: err instanceof Error ? err.stack : undefined });
     }
 
     inputValue = '';
