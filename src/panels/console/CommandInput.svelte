@@ -64,16 +64,16 @@
   .command-input {
     display: flex;
     align-items: center;
-    padding: 4px 8px;
-    gap: 6px;
+    padding: 2px 6px;
+    gap: 4px;
     flex-shrink: 0;
   }
-  .prompt { font-size: 14px; font-weight: bold; flex-shrink: 0; }
+  .prompt { font-size: 12px; font-weight: bold; flex-shrink: 0; }
   .input {
     background: none;
     border: none;
     outline: none;
-    font-size: 12px;
+    font-size: 11px;
     font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
     flex: 1;
     min-width: 0;

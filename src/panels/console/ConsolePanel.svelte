@@ -52,28 +52,28 @@
 </div>
 
 <style>
-  .console-panel { display: flex; flex-direction: column; height: 100%; }
-  .toolbar { display: flex; align-items: center; gap: 6px; padding: 4px 8px; flex-shrink: 0; }
+  .console-panel { display: flex; flex-direction: column; height: 100%; font-size: 12px; }
+  .toolbar { display: flex; align-items: center; gap: 6px; padding: 2px 6px; flex-shrink: 0; }
   .clear-btn {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     padding: 0 4px;
   }
-  .clear-btn:hover { opacity: 0.7; }
-  .filters { display: flex; gap: 2px; flex: 1; }
+  .clear-btn:hover { opacity: 0.8; }
+  .filters { display: flex; gap: 4px; flex: 1; }
   .filter-btn {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 11px;
-    padding: 2px 6px;
+    font-size: 10px;
+    padding: 2px 4px;
     border-radius: 3px;
     font-family: inherit;
   }
-  .filter-btn:hover { opacity: 0.7; }
+  .filter-btn:hover { opacity: 0.8; }
   .filter-btn.active { font-weight: 600; }
   .log-list { flex: 1; overflow-y: auto; min-height: 0; }
-  .empty { padding: 20px; text-align: center; font-size: 12px; }
+  .empty { padding: 12px; text-align: center; font-size: 11px; }
 </style>

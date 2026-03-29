@@ -37,14 +37,14 @@
     display: flex;
     align-items: center;
     border-radius: 4px;
-    padding: 0 6px;
-    height: 24px;
+    padding: 0 4px;
+    height: 20px;
   }
   .search-input {
     background: none;
     border: none;
     outline: none;
-    font-size: 11px;
+    font-size: 10px;
     font-family: inherit;
     flex: 1;
     min-width: 0;
@@ -53,7 +53,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 9px;
     padding: 0;
     display: flex;
     align-items: center;

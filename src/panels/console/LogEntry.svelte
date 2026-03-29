@@ -56,18 +56,18 @@
 
 <style>
   .log-entry {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 3px 8px;
-    font-size: 12px;
-    line-height: 1.5;
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-    min-height: 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 2px 6px;
+      font-size: 11px;
+      line-height: 1.4;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      min-height: 18px;
   }
-  .time { font-size: 10px; flex-shrink: 0; padding-top: 2px; }
-  .level-indicator { flex-shrink: 0; font-size: 10px; padding-top: 2px; width: 12px; text-align: center; }
+    .time { font-size: 9px; flex-shrink: 0; padding-top: 1px; }
+    .level-indicator { flex-shrink: 0; font-size: 9px; padding-top: 1px; width: 10px; text-align: center; }
   .content { flex: 1; min-width: 0; word-break: break-all; }
-  .stack-toggle { background: none; border: none; cursor: pointer; font-size: 10px; font-family: inherit; padding: 0; margin-top: 2px; }
-  .stack { font-size: 10px; margin: 4px 0 0; white-space: pre-wrap; line-height: 1.4; }
+    .stack-toggle { background: none; border: none; cursor: pointer; font-size: 9px; font-family: inherit; padding: 0; margin-top: 2px; }
+    .stack { font-size: 9px; margin: 4px 0 0; white-space: pre-wrap; line-height: 1.3; }
 </style>
