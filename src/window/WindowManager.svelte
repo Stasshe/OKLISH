@@ -3,6 +3,7 @@
   import { windowState } from './window.svelte.ts';
   import FloatingWindow from './FloatingWindow.svelte';
   import DockedWindow from './DockedWindow.svelte';
+  import { draggable } from './actions/draggable';
 
   interface Props {
     onclose?: () => void;
@@ -10,6 +11,16 @@
   }
 
   let { onclose, children }: Props = $props();
+
+  const dragOptions = {
+    onStart: () => {},
+    onMove: (x: number, y: number) => {
+      windowState.minX = x;
+      windowState.minY = y;
+    },
+    onEnd: () => {},
+    threshold: 6
+  };
 </script>
 
 {#if !windowState.minimized}
@@ -25,18 +36,19 @@
 {:else}
   <button
     class="minimized-btn"
+    use:draggable={dragOptions}
     onclick={() => windowState.minimized = false}
     title="Open OKLISH"
+    style="left:{windowState.minX}px; top:{windowState.minY}px;"
   >
-    OK
+    KL
   </button>
 {/if}
 
 <style>
   .minimized-btn {
     position: fixed;
-    bottom: 16px;
-    right: 16px;
+    /* position controlled via inline left/top styles when minimized */
     z-index: 2147483646;
     width: 40px;
     height: 40px;

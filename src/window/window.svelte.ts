@@ -11,6 +11,8 @@ interface WindowState {
   height: number;
   minimized: boolean;
   dockedSize: number;
+  minX: number;
+  minY: number;
 }
 
 function loadState(): WindowState {
@@ -20,6 +22,8 @@ function loadState(): WindowState {
   } catch {
     /* empty */
   }
+  const defaultMinX = typeof window !== 'undefined' ? Math.max(16, window.innerWidth - (40 + 16)) : WINDOW_DEFAULTS.DEFAULT_X;
+  const defaultMinY = typeof window !== 'undefined' ? Math.max(16, window.innerHeight - (40 + 16)) : WINDOW_DEFAULTS.DEFAULT_Y;
   return {
     mode: "floating",
     x: WINDOW_DEFAULTS.DEFAULT_X,
@@ -28,6 +32,8 @@ function loadState(): WindowState {
     height: WINDOW_DEFAULTS.DEFAULT_HEIGHT,
     minimized: false,
     dockedSize: WINDOW_DEFAULTS.DEFAULT_DOCKED_SIZE,
+    minX: defaultMinX,
+    minY: defaultMinY,
   };
 }
 
@@ -42,9 +48,11 @@ let width = $state(initial.width);
 let height = $state(initial.height);
 let minimized = $state(initial.minimized);
 let dockedSize = $state(initial.dockedSize);
+let minX = $state(initial.minX);
+let minY = $state(initial.minY);
 
 function saveState(): void {
-  const snapshot = { mode, x, y, width, height, minimized, dockedSize };
+  const snapshot = { mode, x, y, width, height, minimized, dockedSize, minX, minY };
   try {
     sessionStorage.setItem(WINDOW_KEY, JSON.stringify(snapshot));
   } catch {
@@ -100,6 +108,20 @@ export const windowState = {
   },
   set dockedSize(v: number) {
     dockedSize = v;
+    saveState();
+  },
+  get minX() {
+    return minX;
+  },
+  set minX(v: number) {
+    minX = v;
+    saveState();
+  },
+  get minY() {
+    return minY;
+  },
+  set minY(v: number) {
+    minY = v;
     saveState();
   },
   get isFloating() {

@@ -4,6 +4,7 @@ export interface DraggableParams {
   onStart?: (rect: DOMRect) => void;
   onMove?: (x: number, y: number) => void;
   onEnd?: () => void;
+  threshold?: number;
 }
 
 export function draggable(node: HTMLElement, params: DraggableParams) {
@@ -20,25 +21,40 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
   }
 
   let handle = getHandle();
-
   function pointerDown(e: PointerEvent) {
     if (p.ignoreSelector && (e.target as HTMLElement).closest(p.ignoreSelector)) return;
-    e.preventDefault();
-    e.stopPropagation();
     const rect = node.getBoundingClientRect();
-    p.onStart?.(rect);
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
+    const startX = e.clientX;
+    const startY = e.clientY;
+    let moved = false;
+    const threshold = typeof p.threshold === 'number' ? p.threshold : 0;
+
+    function blockClick(ev: Event) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
 
     function onPointerMove(ev: PointerEvent) {
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      if (!moved && Math.abs(dx) + Math.abs(dy) < threshold) return;
+      if (!moved) {
+        moved = true;
+        p.onStart?.(rect);
+        document.addEventListener('click', blockClick, true);
+      }
       ev.preventDefault();
       p.onMove?.(Math.round(ev.clientX - offsetX), Math.round(ev.clientY - offsetY));
     }
 
     function onPointerUp() {
-      p.onEnd?.();
+      if (moved) p.onEnd?.();
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
+      // keep the click blocker until the next tick so it can intercept the click
+      setTimeout(() => document.removeEventListener('click', blockClick, true), 0);
     }
 
     document.addEventListener('pointermove', onPointerMove);
@@ -53,26 +69,39 @@ export function draggable(node: HTMLElement, params: DraggableParams) {
 
   function touchStart(e: TouchEvent) {
     if (p.ignoreSelector && (e.target as HTMLElement).closest(p.ignoreSelector)) return;
-    if (e.cancelable) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
     const rect = node.getBoundingClientRect();
-    p.onStart?.(rect);
     const startTouch = e.touches[0];
+    const startX = startTouch.clientX;
+    const startY = startTouch.clientY;
     const offsetX = startTouch.clientX - rect.left;
     const offsetY = startTouch.clientY - rect.top;
+    let moved = false;
+    const threshold = typeof p.threshold === 'number' ? p.threshold : 0;
+
+    function blockClick(ev: Event) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
 
     function onTouchMove(ev: TouchEvent) {
-      ev.preventDefault();
       const t = ev.touches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      if (!moved && Math.abs(dx) + Math.abs(dy) < threshold) return;
+      if (!moved) {
+        moved = true;
+        p.onStart?.(rect);
+        document.addEventListener('click', blockClick, true);
+      }
+      ev.preventDefault();
       p.onMove?.(Math.round(t.clientX - offsetX), Math.round(t.clientY - offsetY));
     }
 
     function onTouchEnd() {
-      p.onEnd?.();
+      if (moved) p.onEnd?.();
       document.removeEventListener('touchmove', onTouchMove as EventListener);
       document.removeEventListener('touchend', onTouchEnd as EventListener);
+      setTimeout(() => document.removeEventListener('click', blockClick, true), 0);
     }
 
     const addOpts: AddEventListenerOptions = { passive: false };
