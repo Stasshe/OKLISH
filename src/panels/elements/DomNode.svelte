@@ -15,9 +15,35 @@
   const initiallyExpanded = depth < 2;
   let expanded = $state(initiallyExpanded);
 
+  // DOM ref for this node's line so we can scroll it into view when selected
+  let nodeLineEl: HTMLDivElement | null = null;
+
   const tagName = $derived(element.tagName?.toLowerCase() ?? '');
   const hasChildren = $derived(element.children?.length > 0);
   const isSelected = $derived(elementsState.selectedElement === element);
+
+  // When the global selected element changes:
+  // - if the selected element is a descendant of this node's element, expand this node
+  // - if this node *is* the selected element, scroll this node into view
+  $effect(() => {
+    const sel = elementsState.selectedElement as Element | null;
+    if (!sel) return;
+
+    try {
+      if (sel === element) {
+        // ensure this node is visible, defer to next tick so DOM exists
+        setTimeout(() => {
+          if (nodeLineEl) {
+            nodeLineEl.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+          }
+        }, 0);
+      } else if (element.contains?.(sel)) {
+        expanded = true;
+      }
+    } catch (e) {
+      // defensive: some nodes may throw on contains in weird contexts
+    }
+  });
 
   function getAttributeString(): string {
     if (!element.attributes) return '';
@@ -37,6 +63,7 @@
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
     class="node-line"
+    bind:this={nodeLineEl}
     class:selected={isSelected}
     style="padding-left:{depth * 16}px;background:{isSelected ? colors.selection : 'transparent'};"
     onclick={(e) => { e.stopPropagation(); elementsState.select(element); }}
