@@ -8,36 +8,20 @@
   let history: string[] = [];
   let historyIndex = $state(-1);
 
-  function execute() {
+  async function execute() {
     const code = inputValue.trim();
     if (!code) return;
 
     history = [code, ...history].slice(0, 100);
     historyIndex = -1;
 
-    consoleState.addEntry({
-      id: `cmd_${Date.now()}`,
-      level: 'log',
-      args: [`> ${code}`],
-      timestamp: Date.now(),
-    });
+    consoleState.addEntry({ id: `cmd_${Date.now()}`, level: 'log', args: [`> ${code}`], timestamp: Date.now() });
 
     try {
-      const result = new Function(`return (${code})`)();
-      consoleState.addEntry({
-        id: `res_${Date.now()}`,
-        level: 'log',
-        args: [result],
-        timestamp: Date.now(),
-      });
+      const result = await new Function(code)();
+      consoleState.addEntry({ id: `res_${Date.now()}`, level: 'log', args: [result], timestamp: Date.now() });
     } catch (err) {
-      consoleState.addEntry({
-        id: `err_${Date.now()}`,
-        level: 'error',
-        args: [err instanceof Error ? err.message : String(err)],
-        timestamp: Date.now(),
-        stack: err instanceof Error ? err.stack : undefined,
-      });
+      consoleState.addEntry({ id: `err_${Date.now()}`, level: 'error', args: [err instanceof Error ? err.message : String(err)], timestamp: Date.now(), stack: err instanceof Error ? err.stack : undefined });
     }
 
     inputValue = '';

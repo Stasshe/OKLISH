@@ -2,6 +2,7 @@
   import type { ConsoleEntry } from './console.types';
   import { themeState } from '../../theme/theme.svelte.ts';
   import JsonViewer from '../../ui/JsonViewer.svelte';
+  import { formatArg, isObject, formatTime } from '../../utils/consoleHelpers.ts';
 
   interface Props {
     entry: ConsoleEntry;
@@ -26,23 +27,6 @@
   );
 
   let expanded = $state(false);
-
-  function formatArg(arg: unknown): string {
-    if (typeof arg === 'string') return arg;
-    if (typeof arg === 'number' || typeof arg === 'boolean') return String(arg);
-    if (arg === null) return 'null';
-    if (arg === undefined) return 'undefined';
-    return '';
-  }
-
-  function isObject(arg: unknown): boolean {
-    return arg !== null && typeof arg === 'object';
-  }
-
-  function formatTime(ts: number): string {
-    const d = new Date(ts);
-    return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}.${d.getMilliseconds().toString().padStart(3, '0')}`;
-  }
 </script>
 
 <div class="log-entry" style="background:{bgColor};border-bottom:1px solid {colors.border}22;">
