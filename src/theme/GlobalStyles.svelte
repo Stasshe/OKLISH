@@ -4,7 +4,6 @@
   let styleEl: HTMLStyleElement | null = null;
 
   const css = `
-/* Reset / base styles */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -40,7 +39,6 @@ ul, ol {
   list-style: none;
 }
 
-/* Stylish scrollbar — WebKit + Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--oklish-scrollbar, #424242) transparent;
@@ -100,7 +98,6 @@ html, body, #oklish-root {
         document.head.appendChild(styleEl);
       }
     } catch (err) {
-      // swallow — styles are non-critical
     }
   });
 
@@ -109,5 +106,4 @@ html, body, #oklish-root {
   });
 </script>
 
-<!-- sentinel element used to locate the component's root (shadow root) -->
 <div bind:this={sentinel} aria-hidden="true" style="position:fixed;width:0;height:0;overflow:hidden;pointer-events:none;z-index:-1"></div>

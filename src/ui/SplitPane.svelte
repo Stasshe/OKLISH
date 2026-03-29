@@ -45,7 +45,6 @@
     target.addEventListener('pointerup', onpointerup);
   }
 
-  // Touch fallback for split divider
   function ontouchstart(e: TouchEvent) {
     e.preventDefault();
     dragging = true;

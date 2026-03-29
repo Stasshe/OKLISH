@@ -14,7 +14,6 @@
 
   let { onclose }: Props = $props();
 
-  // Register built-in panels
   $effect(() => {
     panelRegistry.register({ name: 'elements', label: 'Elements', icon: 'code', order: 0, component: ElementsPanel });
     panelRegistry.register({ name: 'console', label: 'Console', icon: 'terminal', order: 1, component: ConsolePanel });

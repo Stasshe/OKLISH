@@ -24,7 +24,6 @@
     try {
       await navigator.clipboard.writeText(text);
     } catch {
-      // Fallback for older browsers
       const textarea = document.createElement('textarea');
       textarea.value = text;
       document.body.appendChild(textarea);

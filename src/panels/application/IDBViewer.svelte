@@ -140,7 +140,6 @@
 
     {#each databases as db}
       <div class="node" style="margin-left:0;display:flex;flex-direction:column;">
-        <!-- Database row -->
         <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid {colors.border}22;transition:background 0.1s;" class="row-hover">
           <button type="button" class="toggle-btn" style="color:{colors.textSecondary};flex-shrink:0;background:none;border:none;cursor:pointer;font-size:12px;padding:0 4px;font-weight:bold;" onclick={() => toggleNode(`db-${db.name}`)}>
             {expanded[`db-${db.name}`] ? '▼' : '▶'}
@@ -152,7 +151,6 @@
           <button type="button" class="action-btn" style="color:{colors.error};" title="Delete database" onclick={() => handleDeleteDb(db.name)}>🗑</button>
         </div>
 
-        <!-- Object stores -->
         {#if expanded[`db-${db.name}`]}
           {#if objectStores[db.name]}
             {#each objectStores[db.name] as storeName}
@@ -165,7 +163,6 @@
                   <button type="button" class="action-btn" style="color:{colors.error};" title="Clear store" onclick={() => handleClearStore(db.name, storeName)}>⊘</button>
                 </div>
 
-                <!-- Entries -->
                 {#if expanded[`store-${db.name}|${storeName}`]}
                   {#if entries[db.name]?.[storeName]}
                     {#each entries[db.name][storeName] as entry}
@@ -181,7 +178,6 @@
                           <button type="button" class="action-btn" style="color:{colors.error};" title="Delete entry" onclick={() => handleDeleteEntry(db.name, storeName, entry.key)}>✕</button>
                         </div>
 
-                        <!-- Entry detail -->
                         {#if expanded[`entry-${db.name}|${storeName}|${String(entry.key)}`]}
                           <div style="margin-left:16px;padding:8px;border-left:1px solid {colors.border}33;background:{colors.bg};">
                             {#if editingId === `entry-${db.name}|${storeName}|${String(entry.key)}`}

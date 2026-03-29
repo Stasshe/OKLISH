@@ -33,14 +33,13 @@
   <div class="actions" onpointerdown={(e) => e.stopPropagation()} ontouchstart={(e) => e.stopPropagation()}>
     <button class="action-btn" style="color:{colors.textSecondary}" title="Toggle floating/docked" onclick={() => windowState.toggleFloating()}>
       {#if windowState.isFloating}
-        <!-- Dock icon (action: dock) -->
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M2 8h20"></path>
           <rect x="2" y="4" width="20" height="16" rx="2"></rect>
           <path d="M6 16h12"></path>
         </svg>
       {:else}
-        <!-- App window icon (action: float) -->
+        
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="2" y="4" width="20" height="16" rx="2"></rect>
           <path d="M10 4v4"></path>
@@ -51,22 +50,21 @@
     </button>
     <button class="action-btn" style="color:{colors.textSecondary}" title="Cycle dock position" onclick={() => windowState.cycleDock()}>
       {#if windowState.mode === 'docked-bottom'}
-        <!-- Chevron down -->
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       {:else if windowState.mode === 'docked-right'}
-        <!-- Chevron right -->
+        
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="9 6 15 12 9 18"></polyline>
         </svg>
       {:else if windowState.mode === 'docked-left'}
-        <!-- Chevron left -->
+        
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="15 6 9 12 15 18"></polyline>
         </svg>
       {:else}
-        <!-- Neutral / place icon when floating -->
+        
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="3" y="3" width="18" height="18" rx="2"></rect>
           <path d="M3 9h18"></path>
@@ -75,7 +73,6 @@
       {/if}
     </button>
     <button class="action-btn" style="color:{colors.textSecondary}" title="Minimize" onclick={() => windowState.minimized = true}>
-      <!-- Minimize2 icon -->
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="4 14 10 14 10 20"></polyline>
         <polyline points="20 10 14 10 14 4"></polyline>
