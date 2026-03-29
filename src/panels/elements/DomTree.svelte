@@ -4,11 +4,20 @@
 
   const colors = $derived(themeState.theme.colors);
   const rootElement = $derived(document.documentElement);
+  let refreshKey = $state(0);
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('oklish:reload-dom', () => {
+      refreshKey = refreshKey + 1;
+    });
+  }
 </script>
 
 <div class="dom-tree" style="background:{colors.bg};">
   {#if rootElement}
-    <DomNode element={rootElement} />
+    {#key refreshKey}
+      <DomNode element={rootElement} />
+    {/key}
   {/if}
 </div>
 

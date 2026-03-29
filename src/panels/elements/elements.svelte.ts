@@ -30,4 +30,11 @@ export const elementsState = {
       // ignore in non-browser environments
     }
   },
+  reload(): void {
+    try {
+      window.dispatchEvent(new CustomEvent("oklish:reload-dom"));
+    } catch (e) {
+      // ignore in non-browser environments
+    }
+  },
 };

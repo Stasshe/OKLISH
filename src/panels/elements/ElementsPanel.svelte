@@ -31,6 +31,14 @@
     >
       ⊙
     </button>
+    <button
+      class="reload-btn"
+      title="Reload DOM"
+      style="color:{colors.textSecondary};"
+      onclick={() => elementsState.reload()}
+    >
+      ⟲
+    </button>
   </div>
 
   <div class="main">
@@ -64,6 +72,8 @@
   }
   .inspect-btn:hover { opacity: 0.7; }
   .inspect-btn.active { background: rgba(0, 120, 212, 0.2); }
+  .reload-btn { background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px; }
+  .reload-btn:hover { opacity: 0.7; }
   .main { flex: 1; min-height: 0; }
   .right-panel { display: flex; flex-direction: column; height: 100%; }
   :global(.elements-panel .split-pane > .pane:first-child) { overflow: hidden; }
