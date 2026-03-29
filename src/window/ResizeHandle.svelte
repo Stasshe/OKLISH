@@ -30,18 +30,44 @@
     target.addEventListener('pointermove', onpointermove);
     target.addEventListener('pointerup', onpointerup);
   }
+
+  // Touch fallback for resize handles
+  function ontouchstart(e: TouchEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    const startX = e.touches[0].clientX;
+    const startY = e.touches[0].clientY;
+
+    function onTouchMove(ev: TouchEvent) {
+      ev.preventDefault();
+      const dx = ev.touches[0].clientX - startX;
+      const dy = ev.touches[0].clientY - startY;
+      onresize(dx, dy);
+    }
+
+    function onTouchEnd() {
+      document.removeEventListener('touchmove', onTouchMove as EventListener);
+      document.removeEventListener('touchend', onTouchEnd as EventListener);
+    }
+
+    const opts: AddEventListenerOptions = { passive: false };
+    document.addEventListener('touchmove', onTouchMove as EventListener, opts);
+    document.addEventListener('touchend', onTouchEnd as EventListener);
+  }
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   class="resize-handle resize-{position}"
   onpointerdown={onpointerdown}
+  ontouchstart={ontouchstart}
 ></div>
 
 <style>
   .resize-handle {
     position: absolute;
     z-index: 10;
+    touch-action: none;
   }
   .resize-top, .resize-bottom { left: 0; right: 0; height: 4px; cursor: ns-resize; }
   .resize-left, .resize-right { top: 0; bottom: 0; width: 4px; cursor: ew-resize; }

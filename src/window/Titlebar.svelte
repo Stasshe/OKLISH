@@ -5,15 +5,17 @@
 
   interface Props {
     ondragstart?: (e: PointerEvent) => void;
+    ondragstartTouch?: (e: TouchEvent) => void;
+    onclose?: () => void;
   }
 
-  let { ondragstart }: Props = $props();
+  let { ondragstart, ondragstartTouch, onclose }: Props = $props();
 
   const colors = $derived(themeState.theme.colors);
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="titlebar" style="background:{colors.bgSecondary};border-bottom:1px solid {colors.border};" onpointerdown={ondragstart}>
+<div class="titlebar" style="background:{colors.bgSecondary};border-bottom:1px solid {colors.border};" onpointerdown={ondragstart} ontouchstart={ondragstartTouch}>
   <div class="tabs">
     {#each panelRegistry.panels as panel}
       <button
@@ -22,12 +24,13 @@
         style="color:{panelRegistry.activePanel === panel.name ? colors.text : colors.textSecondary};background:{panelRegistry.activePanel === panel.name ? colors.bg : 'transparent'};border-bottom:{panelRegistry.activePanel === panel.name ? `2px solid ${colors.accent}` : '2px solid transparent'};"
         onclick={() => panelRegistry.setActive(panel.name)}
         onpointerdown={(e) => e.stopPropagation()}
+        ontouchstart={(e) => e.stopPropagation()}
       >
         {panel.label}
       </button>
     {/each}
   </div>
-  <div class="actions" onpointerdown={(e) => e.stopPropagation()}>
+  <div class="actions" onpointerdown={(e) => e.stopPropagation()} ontouchstart={(e) => e.stopPropagation()}>
     <button class="action-btn" style="color:{colors.textSecondary}" title="Switch window mode" onclick={() => windowState.cycleMode()}>
       {#if windowState.isFloating}
         <!-- Dock icon (action: dock) -->
@@ -66,6 +69,7 @@
     height: 32px;
     padding: 0 4px;
     user-select: none;
+    touch-action: none;
     cursor: grab;
     flex-shrink: 0;
   }

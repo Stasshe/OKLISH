@@ -41,6 +41,32 @@
     target.addEventListener('pointermove', onpointermove);
     target.addEventListener('pointerup', onpointerup);
   }
+
+  // Touch fallback for split divider
+  function ontouchstart(e: TouchEvent) {
+    e.preventDefault();
+    const startX = e.touches[0].clientX;
+    const startY = e.touches[0].clientY;
+
+    function onTouchMove(ev: TouchEvent) {
+      ev.preventDefault();
+      const rect = container.getBoundingClientRect();
+      if (direction === 'horizontal') {
+        ratio = Math.max(0.15, Math.min(0.85, (ev.touches[0].clientX - rect.left) / rect.width));
+      } else {
+        ratio = Math.max(0.15, Math.min(0.85, (ev.touches[0].clientY - rect.top) / rect.height));
+      }
+    }
+
+    function onTouchEnd() {
+      document.removeEventListener('touchmove', onTouchMove as EventListener);
+      document.removeEventListener('touchend', onTouchEnd as EventListener);
+    }
+
+    const opts: AddEventListenerOptions = { passive: false };
+    document.addEventListener('touchmove', onTouchMove as EventListener, opts);
+    document.addEventListener('touchend', onTouchEnd as EventListener);
+  }
 </script>
 
 <div class="split-pane split-{direction}" bind:this={container}>
@@ -52,6 +78,7 @@
     class="divider"
     style="background:{colors.border};{direction === 'horizontal' ? 'cursor:col-resize;width:3px;' : 'cursor:row-resize;height:3px;'}"
     onpointerdown={onpointerdown}
+    ontouchstart={ontouchstart}
   ></div>
   <div class="pane" style="flex:1;">
     {@render second()}
@@ -65,4 +92,5 @@
   .pane { overflow: auto; min-width: 0; min-height: 0; }
   .divider { flex-shrink: 0; }
   .divider:hover { opacity: 0.7; }
+  .divider { touch-action: none; }
 </style>

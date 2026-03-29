@@ -23,6 +23,8 @@
 
   function ondragstart(e: PointerEvent) {
     if ((e.target as HTMLElement).closest('.actions')) return;
+    e.preventDefault();
+    e.stopPropagation();
     isDragging = true;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
@@ -44,6 +46,36 @@
 
     el.addEventListener('pointermove', onpointermove);
     el.addEventListener('pointerup', onpointerup);
+  }
+
+  // Touch fallback for devices that don't provide PointerEvents (older iOS Safari)
+  function ondragstartTouch(e: TouchEvent) {
+    if ((e.target as HTMLElement).closest('.actions')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    isDragging = true;
+    dragStartX = e.touches[0].clientX;
+    dragStartY = e.touches[0].clientY;
+    dragOffsetX = windowState.x;
+    dragOffsetY = windowState.y;
+
+    function ontouchmove(ev: TouchEvent) {
+      ev.preventDefault();
+      const t = ev.touches[0];
+      windowState.x = dragOffsetX + (t.clientX - dragStartX);
+      windowState.y = dragOffsetY + (t.clientY - dragStartY);
+    }
+
+    function ontouchend() {
+      isDragging = false;
+      document.removeEventListener('touchmove', ontouchmove as EventListenerOrEventListenerObject);
+      document.removeEventListener('touchend', ontouchend as EventListenerOrEventListenerObject);
+    }
+
+    // Use non-passive so we can prevent scrolling while dragging
+    const opts: AddEventListenerOptions = { passive: false };
+    document.addEventListener('touchmove', ontouchmove as EventListener, opts);
+    document.addEventListener('touchend', ontouchend as EventListener);
   }
 
   let resizeStartW = 0;
@@ -106,7 +138,7 @@
     color:{colors.text};
   "
 >
-  <Titlebar {ondragstart} {onclose} />
+  <Titlebar {ondragstart} ondragstartTouch={ondragstartTouch} {onclose} />
   <div class="content">
     {@render children()}
   </div>
