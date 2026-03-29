@@ -6,6 +6,7 @@
   import ElementsPanel from './panels/elements/ElementsPanel.svelte';
   import NetworkPanel from './panels/network/NetworkPanel.svelte';
   import ApplicationPanel from './panels/application/ApplicationPanel.svelte';
+  import GlobalStyles from './theme/GlobalStyles.svelte';
 
   interface Props {
     onclose?: () => void;
@@ -21,6 +22,8 @@
     panelRegistry.register({ name: 'application', label: 'Application', icon: 'database', order: 3, component: ApplicationPanel });
   });
 </script>
+
+<GlobalStyles />
 
 <WindowManager {onclose}>
   {#snippet children()}

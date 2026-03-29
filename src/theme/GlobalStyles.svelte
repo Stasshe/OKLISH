@@ -1,3 +1,34 @@
+<script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
+  let sentinel: HTMLElement | null = null;
+  let styleEl: HTMLStyleElement | null = null;
+
+  const css = `
+/* Theme variables (scoped to #oklish-root) */
+#oklish-root {
+  --oklish-bg: #1e1e1e;
+  --oklish-bg-secondary: #252526;
+  --oklish-bg-tertiary: #2d2d30;
+  --oklish-text: #cccccc;
+  --oklish-text-secondary: #9d9d9d;
+  --oklish-text-muted: #6a6a6a;
+  --oklish-border: #3c3c3c;
+  --oklish-border-secondary: #4a4a4a;
+  --oklish-accent: #0078d4;
+  --oklish-accent-hover: #1a8ceb;
+  --oklish-error: #f44747;
+  --oklish-warning: #cca700;
+  --oklish-success: #89d185;
+  --oklish-info: #75beff;
+  --oklish-scrollbar: #424242;
+  --oklish-scrollbar-hover: #4f4f4f;
+  --oklish-selection: #264f78;
+  --oklish-radius: 4px;
+  --oklish-transition: 150ms ease;
+  --oklish-font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+}
+
+/* Reset / base styles */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -79,3 +110,28 @@ html, body, #oklish-root {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+`;
+
+  onMount(() => {
+    try {
+      const root = sentinel && sentinel.getRootNode ? sentinel.getRootNode() as Document | ShadowRoot : document;
+      styleEl = document.createElement('style');
+      styleEl.setAttribute('data-oklish-global-styles', '');
+      styleEl.textContent = css;
+      if (root && root instanceof ShadowRoot) {
+        root.appendChild(styleEl);
+      } else {
+        document.head.appendChild(styleEl);
+      }
+    } catch (err) {
+      // swallow — styles are non-critical
+    }
+  });
+
+  onDestroy(() => {
+    if (styleEl && styleEl.parentNode) styleEl.parentNode.removeChild(styleEl);
+  });
+</script>
+
+<!-- sentinel element used to locate the component's root (shadow root) -->
+<div bind:this={sentinel} aria-hidden="true" style="position:fixed;width:0;height:0;overflow:hidden;pointer-events:none;z-index:-1"></div>
