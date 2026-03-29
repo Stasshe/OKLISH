@@ -64,8 +64,7 @@
 │   │   │       ├── generateHar.ts
 │   │   │       └── parseHeaders.ts
 │   │   ├── panel.types.ts
-│   │   ├── registry.svelte.ts
-│   │   └── sources
+│   │   └── registry.svelte.ts
 │   ├── plugins
 │   │   ├── SamplePanel.svelte
 │   │   ├── api.ts
@@ -123,7 +122,7 @@
 ├── tsconfig.json
 └── vite.config.ts
 
-21 directories, 103 files
+20 directories, 103 files
 
 src/*.ts, *.tsx の統計:
 Total Lines: 2827
@@ -131,7 +130,7 @@ Total Characters: 80454
 Total File Size (bytes): 80460
 
 Development Size
-136M	.
+151M	.
 
 Build Size
 2.6M	dist
