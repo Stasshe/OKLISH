@@ -3,7 +3,7 @@
   import { eventBus } from "../core/events";
   import { STORAGE_PREFIX } from "../core/constants";
 
-  let greeting: string | null = null;
+  let greeting = $state<string | null>(null);
 
   function loadGreeting() {
     try {
