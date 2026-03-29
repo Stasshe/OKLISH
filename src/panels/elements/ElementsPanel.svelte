@@ -1,6 +1,7 @@
 <script lang="ts">
   import { themeState } from '../../theme/theme.svelte.ts';
   import { elementsState } from './elements.svelte.ts';
+  import { windowState } from '../../window/window.svelte.ts';
   import './inspectOverlay.ts';
   import DomTree from './DomTree.svelte';
   import StylesEditor from './StylesEditor.svelte';
@@ -9,6 +10,8 @@
   import TabBar from '../../ui/TabBar.svelte';
 
   const colors = $derived(themeState.theme.colors);
+  const mode = $derived(windowState.mode);
+  const splitDirection = $derived(mode === 'docked-left' || mode === 'docked-right' ? 'vertical' : 'horizontal');
   let rightTab = $state('styles');
 
   const tabs = [
@@ -44,7 +47,7 @@
         {/if}
       </div>
     {/snippet}
-    <SplitPane direction="horizontal" initialRatio={0.55} {first} {second} />
+    <SplitPane direction={splitDirection} initialRatio={0.55} {first} {second} />
   </div>
 </div>
 

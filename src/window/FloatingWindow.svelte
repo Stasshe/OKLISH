@@ -15,6 +15,8 @@
 
   const colors = $derived(themeState.theme.colors);
 
+  let rootEl: HTMLElement | null = null;
+
   let dragStartX = 0;
   let dragStartY = 0;
   let dragOffsetX = 0;
@@ -26,27 +28,38 @@
     if ((e.target as HTMLElement).closest('.actions')) return;
     e.preventDefault();
     e.stopPropagation();
+    if (!rootEl) return;
+
     isDragging = true;
-    dragStartX = e.clientX;
-    dragStartY = e.clientY;
-    dragOffsetX = windowState.x;
-    dragOffsetY = windowState.y;
-    const el = e.currentTarget as HTMLElement;
-    el.setPointerCapture(e.pointerId);
+
+    // Calculate pointer offset inside the window so the cursor stays
+    // at the same relative position while dragging.
+    const rect = rootEl.getBoundingClientRect();
+    const pointerOffsetX = e.clientX - rect.left;
+    const pointerOffsetY = e.clientY - rect.top;
 
     function onpointermove(ev: PointerEvent) {
-      windowState.x = dragOffsetX + (ev.clientX - dragStartX);
-      windowState.y = dragOffsetY + (ev.clientY - dragStartY);
+      windowState.x = Math.round(ev.clientX - pointerOffsetX);
+      windowState.y = Math.round(ev.clientY - pointerOffsetY);
     }
 
     function onpointerup() {
       isDragging = false;
-      el.removeEventListener('pointermove', onpointermove);
-      el.removeEventListener('pointerup', onpointerup);
+      document.removeEventListener('pointermove', onpointermove);
+      document.removeEventListener('pointerup', onpointerup);
     }
 
-    el.addEventListener('pointermove', onpointermove);
-    el.addEventListener('pointerup', onpointerup);
+    // Attach to document to ensure we receive events even if the pointer
+    // leaves the titlebar or the window during the drag.
+    document.addEventListener('pointermove', onpointermove);
+    document.addEventListener('pointerup', onpointerup);
+
+    // Best-effort pointer capture on the original target if supported.
+    try {
+      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+    } catch {
+      /* ignore */
+    }
   }
 
   // Touch fallback for devices that don't provide PointerEvents (older iOS Safari)
@@ -54,17 +67,21 @@
     if ((e.target as HTMLElement).closest('.actions')) return;
     e.preventDefault();
     e.stopPropagation();
+    if (!rootEl) return;
+
     isDragging = true;
-    dragStartX = e.touches[0].clientX;
-    dragStartY = e.touches[0].clientY;
-    dragOffsetX = windowState.x;
-    dragOffsetY = windowState.y;
+
+    // Calculate pointer offset inside the window for touch as well.
+    const rect = rootEl.getBoundingClientRect();
+    const startTouch = e.touches[0];
+    const pointerOffsetX = startTouch.clientX - rect.left;
+    const pointerOffsetY = startTouch.clientY - rect.top;
 
     function ontouchmove(ev: TouchEvent) {
       ev.preventDefault();
       const t = ev.touches[0];
-      windowState.x = dragOffsetX + (t.clientX - dragStartX);
-      windowState.y = dragOffsetY + (t.clientY - dragStartY);
+      windowState.x = Math.round(t.clientX - pointerOffsetX);
+      windowState.y = Math.round(t.clientY - pointerOffsetY);
     }
 
     function ontouchend() {
@@ -73,7 +90,6 @@
       document.removeEventListener('touchend', ontouchend as EventListenerOrEventListenerObject);
     }
 
-    // Use non-passive so we can prevent scrolling while dragging
     const opts: AddEventListenerOptions = { passive: false };
     document.addEventListener('touchmove', ontouchmove as EventListener, opts);
     document.addEventListener('touchend', ontouchend as EventListener);
@@ -137,6 +153,7 @@
 
 <div
   class="floating-window"
+  bind:this={rootEl}
   style="
     left:{windowState.x}px;
     top:{windowState.y}px;
