@@ -1,10 +1,12 @@
 import type { CapturedLog, InterceptorHandle, LogLevel } from "./interceptor.types";
+import { computeNextLogId } from "../storage/console.ts";
 
 type LogCallback = (entry: CapturedLog) => void;
 
 const LOG_LEVELS: LogLevel[] = ["log", "warn", "error", "info", "debug"];
 
-let idCounter = 0;
+// Initialize id counter from persisted entries to avoid id collisions after reload
+let idCounter = computeNextLogId();
 
 export function interceptConsole(callback: LogCallback): InterceptorHandle {
   const originals = new Map<LogLevel, (...args: unknown[]) => void>();
