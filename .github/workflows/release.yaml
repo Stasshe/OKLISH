@@ -81,10 +81,7 @@ jobs:
         run: npm run build
 
       - name: Run update scripts
-        run: |
-          echo "Running version update scripts..."
-          node scripts/chore/update-readmes-version.js
-          
+        run: |          
           if [ -f "./tree.sh" ]; then
             chmod +x ./tree.sh
             ./tree.sh
@@ -92,13 +89,6 @@ jobs:
             echo "Warning: tree.sh not found, skipping"
           fi
           
-          if [ -f "./tree-built-out.sh" ]; then
-            chmod +x ./tree-built-out.sh
-            ./tree-built-out.sh
-          else
-            echo "Warning: tree-built-out.sh not found, skipping"
-          fi
-
       - name: Get previous tag
         id: prev_tag
         run: |
