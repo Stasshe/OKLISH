@@ -20,6 +20,7 @@
   let dragOffsetX = 0;
   let dragOffsetY = 0;
   let isDragging = false;
+  let activeResize = $state<string | null>(null);
 
   function ondragstart(e: PointerEvent) {
     if ((e.target as HTMLElement).closest('.actions')) return;
@@ -86,6 +87,14 @@
     resizeStartH = windowState.height;
   }
 
+  function setActiveResize(pos: string) {
+    activeResize = pos;
+  }
+
+  function clearActiveResize() {
+    activeResize = null;
+  }
+
   function makeResizeHandler(position: string) {
     let startW = 0;
     let startH = 0;
@@ -135,6 +144,10 @@
     height:{windowState.height}px;
     background:{colors.bg};
     border:1px solid {colors.border};
+    border-top-color:{activeResize && activeResize.includes('top') ? colors.accent : colors.border};
+    border-right-color:{activeResize && activeResize.includes('right') ? colors.accent : colors.border};
+    border-bottom-color:{activeResize && activeResize.includes('bottom') ? colors.accent : colors.border};
+    border-left-color:{activeResize && activeResize.includes('left') ? colors.accent : colors.border};
     color:{colors.text};
   "
 >
@@ -142,15 +155,14 @@
   <div class="content">
     {@render children()}
   </div>
-
-  <ResizeHandle position="top" onresize={makeResizeHandler('top')} />
-  <ResizeHandle position="bottom" onresize={makeResizeHandler('bottom')} />
-  <ResizeHandle position="left" onresize={makeResizeHandler('left')} />
-  <ResizeHandle position="right" onresize={makeResizeHandler('right')} />
-  <ResizeHandle position="top-left" onresize={makeResizeHandler('top-left')} />
-  <ResizeHandle position="top-right" onresize={makeResizeHandler('top-right')} />
-  <ResizeHandle position="bottom-left" onresize={makeResizeHandler('bottom-left')} />
-  <ResizeHandle position="bottom-right" onresize={makeResizeHandler('bottom-right')} />
+  <ResizeHandle position="top" onresize={makeResizeHandler('top')} onresizestart={() => setActiveResize('top')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="bottom" onresize={makeResizeHandler('bottom')} onresizestart={() => setActiveResize('bottom')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="left" onresize={makeResizeHandler('left')} onresizestart={() => setActiveResize('left')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="right" onresize={makeResizeHandler('right')} onresizestart={() => setActiveResize('right')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="top-left" onresize={makeResizeHandler('top-left')} onresizestart={() => setActiveResize('top-left')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="top-right" onresize={makeResizeHandler('top-right')} onresizestart={() => setActiveResize('top-right')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="bottom-left" onresize={makeResizeHandler('bottom-left')} onresizestart={() => setActiveResize('bottom-left')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="bottom-right" onresize={makeResizeHandler('bottom-right')} onresizestart={() => setActiveResize('bottom-right')} onresizeend={clearActiveResize} />
 </div>
 
 <style>

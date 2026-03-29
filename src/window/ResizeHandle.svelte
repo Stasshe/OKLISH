@@ -4,9 +4,11 @@
   interface Props {
     position: 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     onresize: (dx: number, dy: number) => void;
+    onresizestart?: () => void;
+    onresizeend?: () => void;
   }
 
-  let { position, onresize }: Props = $props();
+  let { position, onresize, onresizestart, onresizeend }: Props = $props();
 
   function onpointerdown(e: PointerEvent) {
     e.preventDefault();
@@ -14,6 +16,7 @@
     const startX = e.clientX;
     const startY = e.clientY;
     const target = e.currentTarget as HTMLElement;
+    onresizestart?.();
     target.setPointerCapture(e.pointerId);
 
     function onpointermove(ev: PointerEvent) {
@@ -23,6 +26,7 @@
     }
 
     function onpointerup() {
+      onresizeend?.();
       target.removeEventListener('pointermove', onpointermove);
       target.removeEventListener('pointerup', onpointerup);
     }
@@ -37,6 +41,7 @@
     e.stopPropagation();
     const startX = e.touches[0].clientX;
     const startY = e.touches[0].clientY;
+    onresizestart?.();
 
     function onTouchMove(ev: TouchEvent) {
       ev.preventDefault();
@@ -46,6 +51,7 @@
     }
 
     function onTouchEnd() {
+      onresizeend?.();
       document.removeEventListener('touchmove', onTouchMove as EventListener);
       document.removeEventListener('touchend', onTouchEnd as EventListener);
     }

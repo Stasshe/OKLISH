@@ -20,6 +20,16 @@
 
   let resizeStart = 0;
 
+  let activeResize = $state<string | null>(null);
+
+  function setActiveResize(pos: string) {
+    activeResize = pos;
+  }
+
+  function clearActiveResize() {
+    activeResize = null;
+  }
+
   function makeResizeHandler() {
     let start = 0;
     let initialized = false;
@@ -47,10 +57,14 @@
     {isBottom ? `height:${windowState.dockedSize}px;` : `width:${windowState.dockedSize}px;`}
     background:{colors.bg};
     border-{isBottom ? 'top' : isRight ? 'left' : 'right'}:1px solid {colors.border};
+    border-top-color:{activeResize && activeResize.includes('top') ? colors.accent : colors.border};
+    border-right-color:{activeResize && activeResize.includes('right') ? colors.accent : colors.border};
+    border-bottom-color:{activeResize && activeResize.includes('bottom') ? colors.accent : colors.border};
+    border-left-color:{activeResize && activeResize.includes('left') ? colors.accent : colors.border};
     color:{colors.text};
   "
 >
-  <ResizeHandle position={resizePosition} onresize={makeResizeHandler()} />
+  <ResizeHandle position={resizePosition} onresize={makeResizeHandler()} onresizestart={() => setActiveResize(resizePosition)} onresizeend={clearActiveResize} />
   <Titlebar {onclose} />
   <div class="content">
     {@render children()}

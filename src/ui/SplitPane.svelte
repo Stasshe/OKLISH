@@ -18,9 +18,11 @@
     ratio = initialRatio;
   });
   let container: HTMLElement;
+  let dragging = $state(false);
 
   function onpointerdown(e: PointerEvent) {
     e.preventDefault();
+    dragging = true;
     const target = e.currentTarget as HTMLElement;
     target.setPointerCapture(e.pointerId);
 
@@ -34,6 +36,7 @@
     }
 
     function onpointerup() {
+      dragging = false;
       target.removeEventListener('pointermove', onpointermove);
       target.removeEventListener('pointerup', onpointerup);
     }
@@ -45,6 +48,7 @@
   // Touch fallback for split divider
   function ontouchstart(e: TouchEvent) {
     e.preventDefault();
+    dragging = true;
     const startX = e.touches[0].clientX;
     const startY = e.touches[0].clientY;
 
@@ -59,6 +63,7 @@
     }
 
     function onTouchEnd() {
+      dragging = false;
       document.removeEventListener('touchmove', onTouchMove as EventListener);
       document.removeEventListener('touchend', onTouchEnd as EventListener);
     }
@@ -76,7 +81,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="divider"
-    style="background:{colors.border};{direction === 'horizontal' ? 'cursor:col-resize;width:3px;' : 'cursor:row-resize;height:3px;'}"
+    style="background:{dragging ? colors.accent : colors.border};{direction === 'horizontal' ? 'cursor:col-resize;width:3px;' : 'cursor:row-resize;height:3px;'}"
     onpointerdown={onpointerdown}
     ontouchstart={ontouchstart}
   ></div>
