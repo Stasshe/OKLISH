@@ -18,6 +18,15 @@
 <div class="titlebar" style="background:{colors.bgSecondary};border-bottom:1px solid {colors.border};" onpointerdown={ondragstart} ontouchstart={ondragstartTouch}>
   <div class="tabs">
     {#each panelRegistry.panels as panel}
+      {#if panel.name === 'elements'}
+        <div class="grip" style="color:{colors.textSecondary}" title="Drag handle" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 7h10"></path>
+            <path d="M7 12h10"></path>
+            <path d="M7 17h10"></path>
+          </svg>
+        </div>
+      {/if}
       <button
         class="tab"
         class:active={panelRegistry.activePanel === panel.name}
@@ -134,4 +143,14 @@
     border-radius: 4px;
   }
   .action-btn:hover { opacity: 0.7; }
+  .grip {
+    width: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    border-radius: 4px;
+  }
+  .grip svg { display: block; }
 </style>

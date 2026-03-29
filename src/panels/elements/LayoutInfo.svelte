@@ -87,22 +87,22 @@
 </div>
 
 <style>
-  .layout-info { height: 100%; overflow: auto; padding: 8px; font-size: 11px; }
-  .box-model { display: flex; justify-content: center; padding: 8px; }
+  .layout-info { height: 100%; overflow: auto; padding: 6px; font-size: 10px; }
+  .box-model { display: flex; justify-content: center; padding: 4px; }
   .layer {
     position: relative;
-    border: 2px dashed;
-    padding: 16px 24px;
+    border: 1px dashed;
+    padding: 8px 12px;
     text-align: center;
-    min-width: 60px;
+    min-width: 40px;
   }
-  .label { position: absolute; top: 2px; left: 4px; font-size: 10px; font-weight: 500; }
-  .top { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); }
-  .bottom { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); }
-  .left { position: absolute; left: 4px; top: 50%; transform: translateY(-50%); }
-  .right { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); }
-  .content-box { padding: 8px 12px; border-radius: 3px; font-weight: 600; }
-  .empty { padding: 20px; text-align: center; font-size: 12px; }
-  .layout-details { padding: 8px 12px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
-  .layout-details .row { display: flex; gap: 6px; align-items: center; }
+  .label { position: absolute; top: 2px; left: 4px; font-size: 9px; font-weight: 500; }
+  .top { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); font-size: 9px; }
+  .bottom { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); font-size: 9px; }
+  .left { position: absolute; left: 4px; top: 50%; transform: translateY(-50%); font-size: 9px; }
+  .right { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-size: 9px; }
+  .content-box { padding: 6px 8px; border-radius: 3px; font-weight: 600; font-size: 11px; }
+  .empty { padding: 14px; text-align: center; font-size: 11px; }
+  .layout-details { padding: 6px 8px; font-size: 11px; display: flex; flex-direction: column; gap: 4px; }
+  .layout-details .row { display: flex; gap: 4px; align-items: center; }
 </style>
