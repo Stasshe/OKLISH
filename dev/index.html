@@ -30,6 +30,11 @@
       margin: 4px;
     }
     button:hover { background: #f0f0f0; }
+    .heavy-section { margin: 12px 0; padding: 12px; border-radius: 6px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+    .heavy-section h3 { margin: 0 0 6px; }
+    .heavy-section img { max-width: 100%; height: auto; display:block; margin-top:8px; }
+    table { border-collapse: collapse; width: 100%; }
+    table th, table td { padding: 6px 8px; border: 1px solid #eee; text-align: left; font-size:12px; }
   </style>
 </head>
 <body>
@@ -80,6 +85,21 @@
         <li>Item 3</li>
       </ul>
     </div>
+  </div>
+
+  <div class="card" id="heavy-card">
+    <h2>Heavy Page</h2>
+    <p>高負荷のテスト用コンテンツを生成します。画像・iframe・大量DOMなど。</p>
+    <div>
+      <button id="btn-generate-dom">Generate 200 sections</button>
+      <button id="btn-add-many">Generate 2000 sections</button>
+      <button id="btn-load-images">Load 50 images</button>
+      <button id="btn-add-iframes">Add 5 iframes</button>
+      <button id="btn-populate-table">Populate table (2000 rows)</button>
+      <button id="btn-clear">Clear</button>
+    </div>
+    <div id="heavy-output" style="margin-top:12px;"></div>
+    <pre id="heavy-log" style="height:160px;overflow:auto;background:#fbfbfb;padding:8px;border-radius:6px;border:1px solid #eee;margin-top:8px;font-size:12px;"></pre>
   </div>
 
   <script type="module" src="./main.ts"></script>

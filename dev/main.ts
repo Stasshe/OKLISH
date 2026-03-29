@@ -1,6 +1,7 @@
 import OKLISH from '../src/index';
 import { samplePlugin } from '../src/plugins/samplePlugin';
 import './idb-test';
+import './heavy';
 
 // Initialize OKLISH devtools
 OKLISH.init({
