@@ -6,8 +6,6 @@ import './heavy';
 // Initialize OKLISH devtools
 OKLISH.init({
   theme: 'dark',
-  defaultPanel: 'console',
-  windowMode: 'floating',
   plugins: [samplePlugin],
 });
 
