@@ -8,23 +8,37 @@ let appInstance: Record<string, unknown> | null = null;
 export function mountApp(AppComponent: Component, props: Record<string, unknown> = {}): void {
   if (hostElement) return; // Already mounted
 
-  hostElement = document.createElement("div");
-  hostElement.id = HOST_ELEMENT_ID;
-  hostElement.style.cssText =
-    "position:fixed;z-index:2147483647;pointer-events:none;top:0;left:0;width:0;height:0;";
-  document.body.appendChild(hostElement);
+  const doMount = () => {
+    if (hostElement) return;
+    hostElement = document.createElement("div");
+    hostElement.id = HOST_ELEMENT_ID;
+    hostElement.style.cssText =
+      "position:fixed;z-index:2147483647;pointer-events:none;top:0;left:0;width:0;height:0;";
+    document.body.appendChild(hostElement);
 
-  shadowRoot = hostElement.attachShadow({ mode: "open" });
+    shadowRoot = hostElement.attachShadow({ mode: "open" });
 
-  const container = document.createElement("div");
-  container.id = "oklish-root";
-  container.style.cssText = "pointer-events:auto;";
-  shadowRoot.appendChild(container);
+    const container = document.createElement("div");
+    container.id = "oklish-root";
+    container.style.cssText = "pointer-events:auto;";
+    shadowRoot.appendChild(container);
 
-  appInstance = mount(AppComponent, {
-    target: container,
-    props,
-  });
+    appInstance = mount(AppComponent, {
+      target: container,
+      props,
+    });
+  };
+
+  if (document.body) {
+    doMount();
+  } else {
+    // If called before <body> is parsed, wait for DOMContentLoaded
+    const onReady = () => {
+      document.removeEventListener("DOMContentLoaded", onReady);
+      doMount();
+    };
+    document.addEventListener("DOMContentLoaded", onReady);
+  }
 }
 
 export function unmountApp(): void {

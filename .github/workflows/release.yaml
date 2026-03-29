@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Get version from package.json
@@ -99,3 +99,9 @@ jobs:
         run: |
           echo "::warning::Release v${{ steps.version.outputs.version }} already exists. Please update the version in package.json first."
           exit 1
+
+      - name: npm publish
+        if: steps.check_tag.outputs.exists == 'false'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
