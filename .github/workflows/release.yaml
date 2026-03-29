@@ -244,4 +244,4 @@ jobs:
       - name: NPM Publish
         if: github.event.inputs.prerelease == 'false'
         run: |
-          npm publish
+          npm publish --provenance
