@@ -65,7 +65,7 @@
     class="node-line"
     bind:this={nodeLineEl}
     class:selected={isSelected}
-    style="padding-left:{depth * 16}px;background:{isSelected ? colors.selection : 'transparent'};"
+    style="padding-left:{depth * 12}px;background:{isSelected ? colors.selection : 'transparent'};"
     onclick={(e) => { e.stopPropagation(); elementsState.select(element); }}
   >
     {#if hasChildren}
@@ -82,13 +82,13 @@
     {/if}
   </div>
 
-  {#if hasChildren && expanded}
+    {#if hasChildren && expanded}
     {#each Array.from(element.children) as child}
       {#if child instanceof HTMLElement}
         <DomNode element={child} depth={depth + 1} />
       {/if}
     {/each}
-    <div style="padding-left:{depth * 16}px;">
+    <div style="padding-left:{depth * 12}px;">
       <span class="expand-placeholder"></span>
       <span style="color:{colors.accent};">&lt;/{tagName}&gt;</span>
     </div>
@@ -96,10 +96,10 @@
 </div>
 
 <style>
-  .dom-node { font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 12px; }
-  .node-line { display: flex; align-items: center; gap: 2px; padding: 1px 8px; cursor: pointer; white-space: nowrap; min-height: 20px; }
+  .dom-node { font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 11px; user-select: none; }
+  .node-line { display: flex; align-items: center; gap: 1px; padding: 0 6px; cursor: pointer; white-space: nowrap; min-height: 18px; }
   .node-line:hover { opacity: 0.85; }
-  .expand-btn { background: none; border: none; cursor: pointer; font-size: 8px; width: 14px; padding: 0; flex-shrink: 0; }
-  .expand-placeholder { width: 14px; flex-shrink: 0; display: inline-block; }
-  .text-content { max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+  .expand-btn { background: none; border: none; cursor: pointer; font-size: 8px; width: 12px; padding: 0; flex-shrink: 0; }
+  .expand-placeholder { width: 12px; flex-shrink: 0; display: inline-block; }
+  .text-content { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
 </style>
