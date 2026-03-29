@@ -64,7 +64,7 @@
     color:{colors.text};
   "
 >
-  <ResizeHandle position={resizePosition} onresize={makeResizeHandler()} onresizestart={() => setActiveResize(resizePosition)} onresizeend={clearActiveResize} active={activeResize && resizePosition && activeResize.includes(resizePosition)} />
+  <ResizeHandle position={resizePosition} onresize={makeResizeHandler()} onresizestart={() => setActiveResize(resizePosition)} onresizeend={clearActiveResize} active={Boolean(activeResize && resizePosition && activeResize.includes(resizePosition))} />
   <Titlebar {onclose} />
   <div class="content">
     {@render children()}
