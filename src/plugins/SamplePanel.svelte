@@ -42,6 +42,6 @@
 <style>
   .sample-panel { padding: 8px; }
   h3 { margin: 0 0 8px 0; font-size: 14px; }
-  p { margin: 0 0 8px 0; font-size: 13px; color: var(--oklish-text, #333); }
+  p { margin: 0 0 8px 0; font-size: 13px; color: var(--oklish-text, #FFF); }
   button { padding: 6px 8px; font-size: 13px; cursor: pointer; }
 </style>
