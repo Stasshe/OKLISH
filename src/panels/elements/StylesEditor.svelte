@@ -39,11 +39,11 @@
 </div>
 
 <style>
-  .styles-editor { height: 100%; overflow: auto; font-size: 11px; font-family: 'SF Mono', Monaco, monospace; }
-  .header { padding: 4px 6px; font-size: 10px; font-weight: 500; }
-  .style-list { padding: 2px 0; }
-  .style-row { display: flex; gap: 6px; padding: 1px 6px; }
-  .prop { min-width: 96px; }
-  .val { flex: 1; word-break: break-all; overflow-wrap: anywhere; }
-  .empty { padding: 14px; text-align: center; font-size: 11px; }
+  .styles-editor { height: 100%; overflow: auto; font-size: 10px; font-family: 'SF Mono', Monaco, monospace; }
+  .header { padding: 2px 4px; font-size: 9px; font-weight: 500; }
+  .style-list { padding: 1px 0; }
+  .style-row { display: flex; gap: 4px; padding: 0 4px; align-items: center; }
+  .prop { min-width: 72px; font-size: 0.95em; }
+  .val { flex: 1; font-size: 0.95em; word-break: normal; overflow-wrap: anywhere; }
+  .empty { padding: 10px; text-align: center; font-size: 10px; }
 </style>
