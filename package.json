@@ -4,7 +4,7 @@
   "description": "Modern web development inspection tool",
   "repository":{    
     "type": "git",
-    "url": "https://github.com/stasshe/oklish.git"
+    "url": "https://github.com/Stasshe/OKLISH"
   },
   "type": "module",
   "main": "dist/index.js",
