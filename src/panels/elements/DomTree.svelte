@@ -22,5 +22,5 @@
 </div>
 
 <style>
-  .dom-tree { overflow: auto; height: 100%; padding: 4px 0; }
+  .dom-tree { overflow: auto; height: 100%; padding: 2px 0; }
 </style>
