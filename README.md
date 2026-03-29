@@ -20,9 +20,7 @@ CDNから読み込む（例）:
 
 ```html
 <script src="https://unpkg.com/oklish/dist/oklish.js"></script>
-<script>
-  OKLISH.init({ theme: 'dark' });
-</script>
+<script>OKLISH.init();</script>
 ```
 
 npmパッケージとして利用する場合（開発内で読み込む例）:
