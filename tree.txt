@@ -1,0 +1,137 @@
+.
+├── README.md
+├── SPECIFICATION.md
+├── biome.json
+├── dev
+│   ├── heavy.ts
+│   ├── idb-test.ts
+│   ├── index.html
+│   └── main.ts
+├── package-lock.json
+├── package.json
+├── rollup.config.js
+├── src
+│   ├── App.svelte
+│   ├── core
+│   │   ├── config.ts
+│   │   ├── config.types.ts
+│   │   ├── constants.ts
+│   │   ├── events.ts
+│   │   └── mount.ts
+│   ├── index.ts
+│   ├── interceptors
+│   │   ├── console.ts
+│   │   ├── errors.ts
+│   │   ├── fetch.ts
+│   │   ├── interceptor.types.ts
+│   │   ├── manager.ts
+│   │   └── xhr.ts
+│   ├── panels
+│   │   ├── PanelContainer.svelte
+│   │   ├── application
+│   │   │   ├── ApplicationPanel.svelte
+│   │   │   ├── CookieViewer.svelte
+│   │   │   ├── IDBViewer.svelte
+│   │   │   ├── ServiceWorkerInfo.svelte
+│   │   │   ├── StorageViewer.svelte
+│   │   │   ├── application.svelte.ts
+│   │   │   ├── application.types.ts
+│   │   │   └── idb.ts
+│   │   ├── console
+│   │   │   ├── CommandInput.svelte
+│   │   │   ├── ConsolePanel.svelte
+│   │   │   ├── LogEntry.svelte
+│   │   │   ├── ObjectInspector.svelte
+│   │   │   ├── console.svelte.ts
+│   │   │   └── console.types.ts
+│   │   ├── elements
+│   │   │   ├── DomNode.svelte
+│   │   │   ├── DomTree.svelte
+│   │   │   ├── ElementsPanel.svelte
+│   │   │   ├── LayoutInfo.svelte
+│   │   │   ├── StylesEditor.svelte
+│   │   │   ├── elements.svelte.ts
+│   │   │   ├── elements.types.ts
+│   │   │   └── inspectOverlay.ts
+│   │   ├── network
+│   │   │   ├── NetworkPanel.svelte
+│   │   │   ├── RequestDetail.svelte
+│   │   │   ├── RequestList.svelte
+│   │   │   ├── TimingBar.svelte
+│   │   │   ├── network.svelte.ts
+│   │   │   ├── network.types.ts
+│   │   │   └── utils
+│   │   │       ├── generateHar.ts
+│   │   │       └── parseHeaders.ts
+│   │   ├── panel.types.ts
+│   │   ├── registry.svelte.ts
+│   │   └── sources
+│   ├── plugins
+│   │   ├── SamplePanel.svelte
+│   │   ├── api.ts
+│   │   ├── manager.svelte.ts
+│   │   ├── plugin.types.ts
+│   │   └── samplePlugin.ts
+│   ├── storage
+│   │   ├── console.ts
+│   │   ├── serializer.ts
+│   │   ├── session.svelte.ts
+│   │   └── storage.types.ts
+│   ├── theme
+│   │   ├── GlobalStyles.svelte
+│   │   ├── theme.svelte.ts
+│   │   ├── theme.types.ts
+│   │   └── themes.ts
+│   ├── types
+│   │   ├── global.d.ts
+│   │   └── index.ts
+│   ├── ui
+│   │   ├── Badge.svelte
+│   │   ├── Button.svelte
+│   │   ├── IconButton.svelte
+│   │   ├── JsonViewer.svelte
+│   │   ├── SearchInput.svelte
+│   │   ├── SplitPane.svelte
+│   │   ├── TabBar.svelte
+│   │   ├── Table.svelte
+│   │   ├── Tooltip.svelte
+│   │   ├── TreeView.svelte
+│   │   └── VirtualList.svelte
+│   ├── utils
+│   │   ├── clone.ts
+│   │   ├── consoleHelpers.ts
+│   │   ├── dom.ts
+│   │   ├── format.ts
+│   │   ├── timing.ts
+│   │   └── uid.ts
+│   └── window
+│       ├── DockedWindow.svelte
+│       ├── FloatingWindow.svelte
+│       ├── ResizeHandle.svelte
+│       ├── Titlebar.svelte
+│       ├── WindowManager.svelte
+│       ├── actions
+│       │   ├── draggable.ts
+│       │   └── resizable.ts
+│       ├── window.svelte.ts
+│       └── window.types.ts
+├── svelte.config.js
+├── tests
+│   └── setup.ts
+├── tree.sh
+├── tree.txt
+├── tsconfig.json
+└── vite.config.ts
+
+21 directories, 103 files
+
+src/*.ts, *.tsx の統計:
+Total Lines: 2827
+Total Characters: 80454
+Total File Size (bytes): 80460
+
+Development Size
+136M	.
+
+Build Size
+2.6M	dist
