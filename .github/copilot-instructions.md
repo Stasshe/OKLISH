@@ -24,3 +24,8 @@ If the code is too long, divide it into multiple files. Do not put everything in
 Use the replacement tool correctly and appropriately.
 
 When creating a new file, always check if the file already exists. If it does not exist, create it for the first time.
+
+
+You don't need to implement fallback logic for anything. If something fails, just let it fail and show the error. Don't try to catch errors and handle them gracefully. This will help you identify and fix issues faster.
+
+When writing code, focus on clarity and simplicity. Avoid unnecessary complexity and strive for readability. Use meaningful variable and function names that clearly convey their purpose.
