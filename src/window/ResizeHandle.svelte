@@ -1,14 +1,17 @@
 <script lang="ts">
   import { themeState } from '../theme/theme.svelte.ts';
 
+  const colors = $derived(themeState.theme.colors);
+
   interface Props {
     position: 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     onresize: (dx: number, dy: number) => void;
     onresizestart?: () => void;
     onresizeend?: () => void;
+    active?: boolean;
   }
 
-  let { position, onresize, onresizestart, onresizeend }: Props = $props();
+  let { position, onresize, onresizestart, onresizeend, active = false }: Props = $props();
 
   function onpointerdown(e: PointerEvent) {
     e.preventDefault();
@@ -67,6 +70,7 @@
   class="resize-handle resize-{position}"
   onpointerdown={onpointerdown}
   ontouchstart={ontouchstart}
+  style="background:{active ? colors.accent : 'transparent'};"
 ></div>
 
 <style>

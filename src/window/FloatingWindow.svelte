@@ -155,14 +155,14 @@
   <div class="content">
     {@render children()}
   </div>
-  <ResizeHandle position="top" onresize={makeResizeHandler('top')} onresizestart={() => setActiveResize('top')} onresizeend={clearActiveResize} />
-  <ResizeHandle position="bottom" onresize={makeResizeHandler('bottom')} onresizestart={() => setActiveResize('bottom')} onresizeend={clearActiveResize} />
-  <ResizeHandle position="left" onresize={makeResizeHandler('left')} onresizestart={() => setActiveResize('left')} onresizeend={clearActiveResize} />
-  <ResizeHandle position="right" onresize={makeResizeHandler('right')} onresizestart={() => setActiveResize('right')} onresizeend={clearActiveResize} />
-  <ResizeHandle position="top-left" onresize={makeResizeHandler('top-left')} onresizestart={() => setActiveResize('top-left')} onresizeend={clearActiveResize} />
-  <ResizeHandle position="top-right" onresize={makeResizeHandler('top-right')} onresizestart={() => setActiveResize('top-right')} onresizeend={clearActiveResize} />
-  <ResizeHandle position="bottom-left" onresize={makeResizeHandler('bottom-left')} onresizestart={() => setActiveResize('bottom-left')} onresizeend={clearActiveResize} />
-  <ResizeHandle position="bottom-right" onresize={makeResizeHandler('bottom-right')} onresizestart={() => setActiveResize('bottom-right')} onresizeend={clearActiveResize} />
+  <ResizeHandle position="top" onresize={makeResizeHandler('top')} onresizestart={() => setActiveResize('top')} onresizeend={clearActiveResize} active={activeResize && activeResize.includes('top')} />
+  <ResizeHandle position="bottom" onresize={makeResizeHandler('bottom')} onresizestart={() => setActiveResize('bottom')} onresizeend={clearActiveResize} active={activeResize && activeResize.includes('bottom')} />
+  <ResizeHandle position="left" onresize={makeResizeHandler('left')} onresizestart={() => setActiveResize('left')} onresizeend={clearActiveResize} active={activeResize && activeResize.includes('left')} />
+  <ResizeHandle position="right" onresize={makeResizeHandler('right')} onresizestart={() => setActiveResize('right')} onresizeend={clearActiveResize} active={activeResize && activeResize.includes('right')} />
+  <ResizeHandle position="top-left" onresize={makeResizeHandler('top-left')} onresizestart={() => setActiveResize('top-left')} onresizeend={clearActiveResize} active={activeResize === 'top-left'} />
+  <ResizeHandle position="top-right" onresize={makeResizeHandler('top-right')} onresizestart={() => setActiveResize('top-right')} onresizeend={clearActiveResize} active={activeResize === 'top-right'} />
+  <ResizeHandle position="bottom-left" onresize={makeResizeHandler('bottom-left')} onresizestart={() => setActiveResize('bottom-left')} onresizeend={clearActiveResize} active={activeResize === 'bottom-left'} />
+  <ResizeHandle position="bottom-right" onresize={makeResizeHandler('bottom-right')} onresizestart={() => setActiveResize('bottom-right')} onresizeend={clearActiveResize} active={activeResize === 'bottom-right'} />
 </div>
 
 <style>
