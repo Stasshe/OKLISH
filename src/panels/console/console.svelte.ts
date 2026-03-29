@@ -1,9 +1,9 @@
-import type { ConsoleEntry, ConsoleFilter } from "./console.types";
 import {
+  clearConsoleData,
   loadConsoleData,
   saveConsoleDataDebounced,
-  clearConsoleData,
 } from "../../storage/console.ts";
+import type { ConsoleEntry, ConsoleFilter } from "./console.types";
 
 let initialEntries: ConsoleEntry[] = [];
 if (typeof window !== "undefined") {

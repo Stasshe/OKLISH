@@ -1,5 +1,5 @@
-import type { Plugin, PluginAPI } from "./plugin.types";
 import SamplePanel from "./SamplePanel.svelte";
+import type { Plugin, PluginAPI } from "./plugin.types";
 
 let _api: PluginAPI | null = null;
 

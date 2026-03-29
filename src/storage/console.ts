@@ -1,6 +1,6 @@
-import type { ConsoleEntry } from "../panels/console/console.types";
-import { loadPersistedState, savePersistedState, clearPersistedState } from "./session.svelte.ts";
 import { STORAGE_KEYS } from "../core/constants";
+import type { ConsoleEntry } from "../panels/console/console.types";
+import { clearPersistedState, loadPersistedState, savePersistedState } from "./session.svelte.ts";
 
 const STORAGE_KEY = STORAGE_KEYS.CONSOLE_LOGS;
 
@@ -24,7 +24,7 @@ function serializeValue(val: unknown): unknown {
   } catch {
     const seen = new WeakSet();
     try {
-      const s = JSON.stringify(val, function (_k, v) {
+      const s = JSON.stringify(val, (_k, v) => {
         if (typeof v === "function") return `[Function: ${(v as Function).name || "anonymous"}]`;
         if (typeof v === "object" && v !== null) {
           if (seen.has(v)) return "[Circular]";

@@ -1,5 +1,5 @@
-import type { StorageEntry, StorageType } from "./application.types";
 import { loadPersistedState, savePersistedState } from "../../storage/session.svelte.ts";
+import type { StorageEntry, StorageType } from "./application.types";
 
 const initial = loadPersistedState<{
   activeStorage: StorageType;
