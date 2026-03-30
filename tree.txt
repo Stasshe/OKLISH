@@ -45,6 +45,7 @@
 │   │   │   ├── console.svelte.ts
 │   │   │   └── console.types.ts
 │   │   ├── elements
+│   │   │   ├── ContextMenu.svelte
 │   │   │   ├── DomNode.svelte
 │   │   │   ├── DomTree.svelte
 │   │   │   ├── ElementsPanel.svelte
@@ -122,12 +123,12 @@
 ├── tsconfig.json
 └── vite.config.ts
 
-20 directories, 103 files
+20 directories, 104 files
 
 src/*.ts, *.tsx の統計:
 Total Lines: 2888
-Total Characters: 82341
-Total File Size (bytes): 82347
+Total Characters: 82335
+Total File Size (bytes): 82341
 
 Development Size
 151M	.
