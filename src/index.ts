@@ -8,6 +8,8 @@ import { consoleState } from "./panels/console/console.svelte.ts";
 import { networkState } from "./panels/network/network.svelte.ts";
 import { panelRegistry } from "./panels/registry.svelte.ts";
 import { pluginManager } from "./plugins/manager.svelte.ts";
+import { windowState } from "./window/window.svelte.ts";
+import { STORAGE_KEYS } from "./core/constants";
 
 let initialized = false;
 
@@ -18,6 +20,22 @@ function init(userConfig?: Partial<OKLISHConfig>): void {
   }
 
   const config = resolveConfig(userConfig);
+
+  // Apply default window mode from config when there's no persisted window state
+  try {
+    if (typeof window !== "undefined") {
+      const persisted = sessionStorage.getItem(STORAGE_KEYS.WINDOW);
+      if (!persisted && config.windowMode) {
+        if (config.windowMode === "floating") {
+          windowState.mode = "floating";
+        } else {
+          windowState.setDockMode(config.windowMode);
+        }
+      }
+    }
+  } catch {
+    /* ignore */
+  }
 
   // Install interceptors before mounting UI
   installInterceptors({

@@ -34,6 +34,9 @@ const config = {
       name: 'OKLISH',
       sourcemap: true,
       exports: 'named',
+      // Ensure the UMD/browser bundle is minified (oklish.js)
+      // Add terser here so this output is minified regardless of top-level plugin state.
+      plugins: [terser()],
     },
   ],
   plugins: [

@@ -3,7 +3,7 @@ import type { OKLISHConfig } from "./config.types";
 const DEFAULT_CONFIG: OKLISHConfig = {
   theme: "dark",
   defaultPanel: "console",
-  windowMode: "floating",
+  windowMode: "docked-bottom", //floating
   plugins: [],
   persistState: true,
 };

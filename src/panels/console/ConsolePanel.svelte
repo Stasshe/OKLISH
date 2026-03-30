@@ -16,6 +16,27 @@
     { name: 'info', label: 'Info' },
     { name: 'debug', label: 'Debug' },
   ];
+
+  let copied = $state(false);
+
+  function copyLogs() {
+    const stringifyArg = (a: unknown) => {
+      if (typeof a === 'string') return a;
+      try {
+        return JSON.stringify(a);
+      } catch {
+        return String(a);
+      }
+    };
+
+    const text = consoleState.entries
+      .map((e) => `[${e.level.toUpperCase()}] ${e.args.map(stringifyArg).join(' ')}`)
+      .join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+      copied = true;
+      setTimeout(() => (copied = false), 1500);
+    });
+  }
 </script>
 
 <div class="console-panel">
@@ -37,6 +58,14 @@
       {/each}
     </div>
     <SearchInput value={consoleState.searchQuery} onchange={(v) => consoleState.setSearch(v)} placeholder="Filter output..." />
+    <button
+      class="copy-btn"
+      style="color:{copied ? colors.accent : colors.textSecondary};"
+      title="Copy visible logs"
+      onclick={copyLogs}
+    >
+      {copied ? 'Copied!' : '⎘'}
+    </button>
   </div>
 
   <div class="log-list" style="background:{colors.bg};">
@@ -74,6 +103,17 @@
   }
   .filter-btn:hover { opacity: 0.8; }
   .filter-btn.active { font-weight: 600; }
+  .copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 0 4px;
+    font-family: inherit;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { opacity: 0.8; }
   .log-list { flex: 1; overflow-y: auto; min-height: 0; }
   .empty { padding: 12px; text-align: center; font-size: 11px; }
 </style>
