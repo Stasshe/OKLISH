@@ -49,6 +49,11 @@ html, body, #oklish-root {
   scrollbar-color: var(--oklish-scrollbar, #424242) transparent;
 }
 
+/* Prevent scroll chaining from OKLISH into the hosting page */
+html, body, #oklish-root {
+  overscroll-behavior: contain;
+}
+
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;

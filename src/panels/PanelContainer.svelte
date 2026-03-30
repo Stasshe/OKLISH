@@ -15,6 +15,6 @@
 </div>
 
 <style>
-  .panel-container { width: 100%; height: 100%; overflow: hidden; display: flex; flex-direction: column; }
+  .panel-container { width: 100%; height: 100%; overflow: hidden; display: flex; flex-direction: column; overscroll-behavior: contain; }
   .empty { display: flex; align-items: center; justify-content: center; height: 100%; font-size: 12px; }
 </style>
