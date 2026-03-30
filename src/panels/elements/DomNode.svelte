@@ -2,6 +2,7 @@
   import { themeState } from '../../theme/theme.svelte.ts';
   import { elementsState } from './elements.svelte.ts';
   import DomNode from './DomNode.svelte';
+  import ContextMenu from './ContextMenu.svelte';
 
   interface Props {
     element: HTMLElement;
@@ -15,23 +16,54 @@
   const initiallyExpanded = depth < 2;
   let expanded = $state(initiallyExpanded);
 
-  // DOM ref for this node's line so we can scroll it into view when selected
   let nodeLineEl: HTMLDivElement | null = null;
 
   const tagName = $derived(element.tagName?.toLowerCase() ?? '');
   const hasChildren = $derived(element.children?.length > 0);
   const isSelected = $derived(elementsState.selectedElement === element);
 
-  // When the global selected element changes:
-  // - if the selected element is a descendant of this node's element, expand this node
-  // - if this node *is* the selected element, scroll this node into view
+  // Context menu state
+  let menuX = $state(0);
+  let menuY = $state(0);
+  let menuOpen = $state(false);
+
+  // Long-press handling
+  let longPressTimer: ReturnType<typeof setTimeout> | null = null;
+  const LONG_PRESS_MS = 500;
+
+  function openMenu(x: number, y: number) {
+    // Clamp so menu stays inside viewport
+    menuX = Math.min(x, window.innerWidth  - 160);
+    menuY = Math.min(y, window.innerHeight - 160);
+    menuOpen = true;
+  }
+
+  function onContextMenu(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    openMenu(e.clientX, e.clientY);
+  }
+
+  function onPointerDown(e: PointerEvent) {
+    if (e.button !== 0) return; // left only for long-press
+    longPressTimer = setTimeout(() => {
+      openMenu(e.clientX, e.clientY);
+    }, LONG_PRESS_MS);
+  }
+
+  function cancelLongPress() {
+    if (longPressTimer !== null) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+  }
+
   $effect(() => {
     const sel = elementsState.selectedElement as Element | null;
     if (!sel) return;
 
     try {
       if (sel === element) {
-        // ensure this node is visible, defer to next tick so DOM exists
         setTimeout(() => {
           if (nodeLineEl) {
             nodeLineEl.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
@@ -41,7 +73,7 @@
         expanded = true;
       }
     } catch (e) {
-      // defensive: some nodes may throw on contains in weird contexts
+      // defensive
     }
   });
 
@@ -67,6 +99,10 @@
     class:selected={isSelected}
     style="padding-left:{depth * 10}px;background:{isSelected ? colors.selection : 'transparent'};"
     onclick={(e) => { e.stopPropagation(); elementsState.select(element); }}
+    oncontextmenu={onContextMenu}
+    onpointerdown={onPointerDown}
+    onpointerup={cancelLongPress}
+    onpointermove={cancelLongPress}
   >
     {#if hasChildren}
       <button class="expand-btn" style="color:{colors.textMuted};" onclick={(e) => { e.stopPropagation(); expanded = !expanded; }}>
@@ -82,7 +118,7 @@
     {/if}
   </div>
 
-    {#if hasChildren && expanded}
+  {#if hasChildren && expanded}
     {#each Array.from(element.children) as child}
       {#if child instanceof HTMLElement}
         <DomNode element={child} depth={depth + 1} />
@@ -94,6 +130,15 @@
     </div>
   {/if}
 </div>
+
+{#if menuOpen}
+  <ContextMenu
+    x={menuX}
+    y={menuY}
+    {element}
+    onclose={() => { menuOpen = false; }}
+  />
+{/if}
 
 <style>
   .dom-node { font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 10px; user-select: none; }
